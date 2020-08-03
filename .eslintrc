@@ -1,0 +1,11 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "jest": true,
+  },
+  "extends": ["@ctrl/eslint-config", "xo-react/space"],
+  "rules": {
+    "no-mixed-operators": 0
+  }
+}

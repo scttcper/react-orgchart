@@ -1,0 +1,80 @@
+{
+  "name": "@ctrl/react-orgchart",
+  "version": "0.0.0-placeholder",
+  "description": "Vx orgchart module",
+  "author": "Scott Cooper <scttcper@gmail.com>",
+  "license": "MIT",
+  "repository": "scttcper/react-orgchart",
+  "sideEffects": false,
+  "keywords": [
+    "typescript"
+  ],
+  "scripts": {
+    "lint": "eslint --ext .js,.ts, .",
+    "lint:fix": "eslint --fix --ext .js,.ts, .",
+    "prepare": "npm run build",
+    "build": "pika build",
+    "watch:demo": "parcel serve demo/index.html --open",
+    "build:demo": "parcel build demo/index.html",
+    "test": "jest",
+    "test:update": "jest --update-snapshot",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --ci --reporters=default --reporters=jest-junit --coverage"
+  },
+  "@pika/pack": {
+    "pipeline": [
+      [
+        "@pika/plugin-ts-standard-pkg",
+        {
+          "tsconfig": "tsconfig.build.json"
+        }
+      ],
+      [
+        "@pika/plugin-build-web"
+      ]
+    ]
+  },
+  "dependencies": {
+    "d3": "^3.5.17"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@ctrl/eslint-config": "1.0.4",
+    "@fullhuman/postcss-purgecss": "2.3.0",
+    "@pika/pack": "0.5.0",
+    "@pika/plugin-build-web": "0.9.2",
+    "@pika/plugin-ts-standard-pkg": "0.9.2",
+    "@testing-library/jest-dom": "5.11.2",
+    "@testing-library/react": "10.4.7",
+    "@types/d3": "5.0.0",
+    "@types/d3-hierarchy": "1.1.6",
+    "@types/d3-zoom": "1.7.4",
+    "@types/jest": "26.0.8",
+    "@types/node": "14.0.27",
+    "@types/react": "16.9.44",
+    "autoprefixer": "9.8.6",
+    "eslint-config-xo-react": "0.23.0",
+    "eslint-plugin-react": "7.20.5",
+    "eslint-plugin-react-hooks": "4.0.8",
+    "jest": "26.2.2",
+    "jest-junit": "11.1.0",
+    "parcel": "1.12.4",
+    "performant-array-to-tree": "1.7.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "ts-jest": "26.1.4",
+    "typescript": "3.9.7"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "roots": [
+      "<rootDir>/src"
+    ]
+  },
+  "release": {
+    "branch": "master"
+  }
+}
