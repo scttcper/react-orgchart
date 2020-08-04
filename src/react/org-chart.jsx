@@ -1,12 +1,9 @@
-const { createElement, PureComponent } = require('react');
-const { init } = require('../chart');
+import React from 'react';
 
-class OrgChart extends PureComponent {
-  render() {
-    const { id } = this.props;
+import { init } from '../chart';
 
-    return createElement('div', { id });
-  }
+class OrgChart extends React.PureComponent {
+  anchor = React.createRef();
 
   static defaultProps = {
     id: 'react-org-chart',
@@ -16,7 +13,6 @@ class OrgChart extends PureComponent {
     resetId: 'org-chart-reset',
     disableCanvasMouseMove: false,
     disableCanvasMouseWheelZoom: false,
-    tree: {},
   };
 
   componentDidMount() {
@@ -32,8 +28,10 @@ class OrgChart extends PureComponent {
       ...options
     } = this.props;
 
+    console.log('current', this.anchor.current);
     init({
       id: `#${id}`,
+      elem: this.anchor.current,
       zoomInId: zoomInId,
       zoomOutId: zoomOutId,
       scaleToFitId: scaleToFitId,
@@ -42,6 +40,15 @@ class OrgChart extends PureComponent {
       disableCanvasMouseMove,
       disableCanvasMouseWheelZoom,
       ...options,
+    });
+  }
+
+  render() {
+    const { id } = this.props;
+
+    return React.createElement('div', {
+      id,
+      ref: this.anchor,
     });
   }
 }

@@ -5,13 +5,12 @@ export const getTitle = data => data.entity?.title;
 export const getSubTitle = data => data.entity?.subTitle;
 
 export const getCount = data => {
-  let reports = data.children?.length ?? data._children?.length;
-  if (!reports) {
+  let children = data.children?.length ?? data._children?.length;
+  if (!children) {
     return '';
   }
 
-  // return `${count} Reports`;
-  return data._children === null ? 'Collapse' : 'Expand';
+  return `Team (${children})`;
 };
 
 export const getCursorForNode = data =>

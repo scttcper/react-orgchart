@@ -1,4 +1,4 @@
-export const iconLink = ({ svg, x = 5, y = 5, fillColor }) => {
+export const iconLink = ({ svg, x = 5, y = 5 }) => {
   const container = svg
     .append('g')
     .attr('stroke', 'none')

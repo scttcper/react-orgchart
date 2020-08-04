@@ -1,7 +1,7 @@
-const d3 = require('d3');
+import * as d3 from 'd3';
 import { collapse } from '../utils';
-const render = require('./render');
-const defaultConfig = require('./config');
+import render from './render';
+import defaultConfig from './config';
 
 export function init(options) {
   // Merge options with the default config
@@ -12,12 +12,12 @@ export function init(options) {
   };
 
   if (!config.id) {
-    console.error('react-org-chart: missing id for svg root');
-    return;
+    throw new Error('missing id for svg root');
   }
 
   const {
     id,
+    elem,
     treeData,
     lineType,
     margin,
@@ -42,17 +42,12 @@ export function init(options) {
     config.lineDepthY = nodeHeight + 60;
   }
 
-  // Get the root element
-  const elem = document.querySelector(id);
-
   if (!elem) {
-    console.error(`react-org-chart: svg root DOM node not found (id: ${id})`);
-    return;
+    throw new Error('No root elem');
   }
 
   // Reset in case there's any existing DOM
   elem.innerHTML = '';
-
   const elemWidth = elem.offsetWidth;
   const elemHeight = elem.offsetHeight;
 
@@ -131,7 +126,6 @@ export function init(options) {
   // To update translate and scale of zoom
   function interpolateZoom(translate, scale) {
     var self = this;
-    d3.event.preventDefault();
     return d3
       .transition()
       .duration(350)
@@ -242,9 +236,9 @@ export function init(options) {
   d3.select(id).style('height', elemHeight + margin.top + margin.bottom);
 
   // Get the root
-  const orgChart = document.getElementById('root');
+  const orgChart = d3.select('root');
 
-  if (!document.getElementById(`${id}-canvas-container`)) {
+  if (!d3.select(`${id}-canvas-container`)) {
     // Creating  canvas and duplicate svg for image and PDF download
     const canvasContainer = document.createElement('div');
     canvasContainer.setAttribute('id', `${id}-canvas-container`);
@@ -252,7 +246,7 @@ export function init(options) {
     orgChart.append(canvasContainer);
   }
 
-  if (!document.getElementById(`${id}-svg-container`)) {
+  if (!d3.select(`${id}-svg-container`)) {
     // Duplicate svg container
     const svgContainer = document.createElement('div');
     svgContainer.setAttribute('id', `${id}-svg-container`);

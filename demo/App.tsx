@@ -26,11 +26,6 @@ export default class App extends React.Component {
     this.setState({ config: config });
   };
 
-  handleLoadConfig = () => {
-    const { config } = this.state;
-    return config;
-  };
-
   render() {
     // For downloading org chart as image or pdf based on id
     return (
@@ -54,7 +49,6 @@ export default class App extends React.Component {
         </div>
         <OrgChart
           tree={tree[0]}
-          loadConfig={() => this.state.config}
           onConfigChange={config => this.setState({ config })}
         />
       </>

@@ -3,9 +3,14 @@ import { collapse } from '../utils';
 
 export function onClick(config) {
   return datum => {
-    // if (d3.event.defaultPrevented) {
-    //   return;
-    // }
+    if (d3.event.defaultPrevented) {
+      return;
+    }
+
+    const link = event.target.closest('a');
+    if (link?.href) {
+      return;
+    }
 
     const { render, onEntityClick } = config;
     // event.preventDefault();
