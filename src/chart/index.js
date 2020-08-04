@@ -19,7 +19,6 @@ export function init(options) {
     id,
     elem,
     treeData,
-    lineType,
     margin,
     nodeWidth,
     nodeHeight,
@@ -27,18 +26,14 @@ export function init(options) {
     shouldResize,
     zoomInId,
     zoomOutId,
-    resetId,
     disableCanvasMouseWheelZoom,
     disableCanvasMouseMove,
   } = config;
 
   // Calculate how many pixel nodes to be spaced based on the
   // type of line that needs to be rendered
-  if (lineType == 'angle') {
-    config.lineDepthY = nodeHeight + 40;
-  } else {
-    config.lineDepthY = nodeHeight + 60;
-  }
+
+  config.lineDepthY = nodeHeight + 40;
 
   if (!elem) {
     throw new Error('No root elem');
@@ -54,7 +49,8 @@ export function init(options) {
     return d.children;
   });
   config.treeMap = d3.tree(config.tree).nodeSize([nodeWidth + nodeSpacing, nodeHeight + nodeSpacing]);
-  console.log('treemap', config.treeMap);
+  // Collapse tree on load
+  config.treeMap(config.tree).descendants().slice(1).forEach(collapse);
 
   // Calculate width of a node with expanded children
   // const childrenWidth = parseInt((treeData.children.length * nodeWidth) / 2)
@@ -124,69 +120,6 @@ export function init(options) {
     // svg.attr('transform', 'translate(' + zoom.translate() + ')' + 'scale(' + zoom.scale() + ')');
     svg.attr('transform', d3.event.transform);
   }
-
-  // To update translate and scale of zoom
-  function interpolateZoom(translate, scale) {
-    var self = this;
-    return d3
-      .transition()
-      .duration(350)
-      .tween('zoom', function () {
-        var iTranslate = d3.interpolate(zoom.translate(), translate);
-        var iScale = d3.interpolate(zoom.scale(), scale);
-        return function (t) {
-          zoom.scale(iScale(t)).translate(iTranslate(t));
-          zoomed();
-        };
-      });
-  }
-
-  function reset() {
-    // Center to the original center point
-    interpolateZoom([centerPoint, 48], 1);
-
-    // Collapse all of the children on initial load
-    if (treeData && treeData.children) {
-      treeData.children.forEach(collapse);
-      render(config);
-    }
-  }
-
-  // Zoom on button click
-  function zoomClick() {
-    // var clicked = d3.event.target;
-    var direction = 1;
-    var factor = 0.2;
-    var target_zoom = 1;
-    var center = [elemWidth / 2, elemHeight / 2];
-    var extent = zoom.scaleExtent();
-    var translate = zoom.translate();
-    var translate0 = [];
-    var l = [];
-    var view = { x: translate[0], y: translate[1], k: zoom.scale() };
-
-    // d3.event.preventDefault();
-    direction = this.id === zoomInId ? 1 : -1;
-    target_zoom = zoom.scale() * (1 + factor * direction);
-
-    if (target_zoom < extent[0] || target_zoom > extent[1]) {
-      return false;
-    }
-
-    translate0 = [(center[0] - view.x) / view.k, (center[1] - view.y) / view.k];
-    view.k = target_zoom;
-    l = [translate0[0] * view.k + view.x, translate0[1] * view.k + view.y];
-
-    view.x += center[0] - l[0];
-    view.y += center[1] - l[1];
-
-    interpolateZoom([view.x, view.y], view.k);
-  }
-
-  // d3 selects button on click
-  d3.select(`#${zoomInId}`).on('click', zoomClick);
-  d3.select(`#${zoomOutId}`).on('click', zoomClick);
-  d3.select(`#${resetId}`).on('click', reset);
 
   // Add listener for when the browser or parent node resizes
   const resize = () => {

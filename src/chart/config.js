@@ -17,7 +17,6 @@ const margin = {
 };
 
 // Lines
-const lineType = 'angle';
 const lineDepthY = 120; /* Height of the line for child nodes */
 
 // Colors
@@ -40,7 +39,6 @@ const config = {
   nodePaddingY,
   nodeBorderRadius,
   avatarWidth,
-  lineType,
   lineDepthY,
   backgroundColor,
   borderColor,

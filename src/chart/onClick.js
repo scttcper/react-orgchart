@@ -12,6 +12,11 @@ export function onClick(config) {
     }
     // event.preventDefault();
 
+    console.log('click', datum);
+    if (!datum.children && !datum._children) {
+      return;
+    }
+
     if (datum.children) {
       // Collapse the children
       config.callerNode = datum;

@@ -7,9 +7,6 @@ class OrgChart extends React.PureComponent {
 
   static defaultProps = {
     id: 'react-org-chart',
-    zoomInId: 'org-chart-zoom-in',
-    zoomOutId: 'org-chart-zoom-out',
-    resetId: 'org-chart-reset',
     disableCanvasMouseMove: false,
     disableCanvasMouseWheelZoom: false,
   };
@@ -17,9 +14,6 @@ class OrgChart extends React.PureComponent {
   componentDidMount() {
     const {
       id,
-      zoomInId,
-      zoomOutId,
-      resetId,
       disableCanvasMouseMove,
       disableCanvasMouseWheelZoom,
       tree,
@@ -30,9 +24,6 @@ class OrgChart extends React.PureComponent {
     init({
       id: `#${id}`,
       elem: this.anchor.current,
-      zoomInId: zoomInId,
-      zoomOutId: zoomOutId,
-      resetId: resetId,
       data: tree,
       disableCanvasMouseMove,
       disableCanvasMouseWheelZoom,

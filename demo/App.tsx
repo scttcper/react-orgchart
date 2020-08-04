@@ -13,26 +13,15 @@ const tree = arrayToTree(
   { dataField: null },
 );
 
+console.log(tree);
+
 export default class App extends React.Component {
   render() {
     // For downloading org chart as image or pdf based on id
     return (
-      <>
-        <div className="org-chart-zoom-buttons">
-          <button className="org-chart-zoom-button" id="org-chart-zoom-in">
-            Zoom In
-          </button>
-          <button className="org-chart-zoom-button" id="org-chart-zoom-out">
-            Zoom Out
-          </button>
-          <button className="org-chart-zoom-button" id="org-chart-reset">
-            Reset
-          </button>
-        </div>
-        <OrgChart
-          tree={tree[0]}
-        />
-      </>
+      <OrgChart
+        tree={tree[0]}
+      />
     );
   }
 }

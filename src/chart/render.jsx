@@ -48,20 +48,17 @@ export function render(config) {
     getSubTitle,
     getCount,
     onNameClick,
-    onTitleClick,
-    onSubTitleClick,
     onCountClick,
     treeMap,
   } = config;
 
   // Compute the new tree layout.
   const data = treeMap(tree);
-  let nodes = data.descendants();
-  let links = data.links();
+  const nodes = data.descendants();
+  const links = data.links();
 
   // Collapse all of the children on initial load
   // nodes.forEach(collapse);
-  console.log(nodes);
 
   config.links = links;
   config.nodes = nodes;
@@ -72,17 +69,16 @@ export function render(config) {
   });
 
   // Update the nodes
-  let node = svg.selectAll('g.' + CHART_NODE_CLASS).data(nodes);
-
-  let parentNode = sourceNode || treeData;
+  let node = svg.selectAll('g.' + CHART_NODE_CLASS).data(nodes, n => n.data.id);
+  let parentNode = sourceNode || nodes[0];
 
   // Enter any new nodes at the parent's previous position.
-  let nodeEnter = node
+  const nodeEnter = node
     .enter()
-    .insert('g')
+    .append('g')
     .attr('class', CHART_NODE_CLASS)
-    .attr('transform', d => {
-      return `translate(${d.x}, ${d.y})`;
+    .attr('transform', () => {
+      return `translate(${parentNode.x}, ${parentNode.y})`;
     })
     .on('click', onClick(config));
 
@@ -105,7 +101,7 @@ export function render(config) {
     .attr('class', d => (d.isHighlight ? `${ENTITY_HIGHLIGHT} box` : 'box'))
     .attr('width', nodeWidth)
     .attr('height', nodeHeight)
-    .attr('id', d => d.id)
+    .attr('id', d => d.data.id)
     .attr('fill', backgroundColor)
     .attr('stroke', borderColor)
     .attr('rx', nodeBorderRadius)
@@ -145,8 +141,7 @@ export function render(config) {
     .style('font-size', titleFontSize)
     .style('cursor', 'pointer')
     .style('fill', titleColor)
-    .text(d => (typeof getTitle === 'function' ? getTitle(d) : helpers.getTitle(d)))
-    .on('click', helpers.customOnClick(onTitleClick, onClick, config));
+    .text(d => (typeof getTitle === 'function' ? getTitle(d) : helpers.getTitle(d)));
 
   // Count
   nodeEnter
@@ -165,7 +160,7 @@ export function render(config) {
   // Entity's Avatar
   nodeEnter
     .append('image')
-    .attr('id', d => `image-${d.id}`)
+    .attr('id', d => `image-${d.data.id}`)
     .attr('width', avatarWidth)
     .attr('height', avatarWidth)
     .attr('x', avatarPos.x)
@@ -189,8 +184,10 @@ export function render(config) {
     y: 8,
   });
 
+  var nodeUpdate = nodeEnter.merge(node);
+
   // Transition nodes to their new position.
-  let nodeUpdate = node
+  nodeUpdate
     .transition()
     .duration(animationDuration)
     .attr('transform', d => `translate(${d.x},${d.y})`);
