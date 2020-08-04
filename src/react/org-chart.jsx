@@ -3,8 +3,6 @@ import React from 'react';
 import { init } from '../chart';
 
 class OrgChart extends React.PureComponent {
-  anchor = React.createRef();
-
   static defaultProps = {
     id: 'react-org-chart',
     zoomInId: 'org-chart-zoom-in',
@@ -13,6 +11,8 @@ class OrgChart extends React.PureComponent {
     disableCanvasMouseMove: false,
     disableCanvasMouseWheelZoom: false,
   };
+
+  anchor = React.createRef();
 
   componentDidMount() {
     const {
@@ -26,7 +26,6 @@ class OrgChart extends React.PureComponent {
       ...options
     } = this.props;
 
-    console.log('current', this.anchor.current);
     init({
       id: `#${id}`,
       elem: this.anchor.current,
@@ -51,4 +50,4 @@ class OrgChart extends React.PureComponent {
   }
 }
 
-module.exports = OrgChart;
+export default OrgChart;
