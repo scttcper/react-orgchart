@@ -45,6 +45,7 @@ class OrgChart extends React.PureComponent {
 
     return React.createElement('div', {
       id,
+      className: id,
       ref: this.anchor,
     });
   }
