@@ -10,9 +10,7 @@ export function onClick(config) {
     if (link?.href) {
       return;
     }
-    // event.preventDefault();
 
-    console.log('click', datum);
     if (!datum.children && !datum._children) {
       return;
     }

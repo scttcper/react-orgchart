@@ -2,7 +2,7 @@ import React from 'react';
 
 import { init } from '../chart';
 
-class OrgChart extends React.PureComponent {
+export class OrgChart extends React.PureComponent {
   anchor = React.createRef();
 
   static defaultProps = {
@@ -20,7 +20,6 @@ class OrgChart extends React.PureComponent {
       ...options
     } = this.props;
 
-    console.log('current', this.anchor.current);
     init({
       id: `#${id}`,
       elem: this.anchor.current,
@@ -40,5 +39,3 @@ class OrgChart extends React.PureComponent {
     });
   }
 }
-
-module.exports = OrgChart;

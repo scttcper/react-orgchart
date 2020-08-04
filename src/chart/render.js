@@ -9,7 +9,6 @@ const CHART_NODE_CLASS = 'org-chart-node';
 const ENTITY_LINK_CLASS = 'org-chart-entity-link';
 const ENTITY_NAME_CLASS = 'org-chart-entity-name';
 const ENTITY_TITLE_CLASS = 'org-chart-entity-title';
-const ENTITY_SUB_TITLE_CLASS = 'org-chart-entity-sub-title';
 const ENTITY_HIGHLIGHT = 'org-chart-entity-highlight';
 const COUNTS_CLASS = 'org-chart-counts';
 
@@ -78,7 +77,7 @@ export function render(config) {
     .append('g')
     .attr('class', CHART_NODE_CLASS)
     .attr('transform', () => {
-      return `translate(${parentNode.x}, ${parentNode.y})`;
+      return `translate(${parentNode.x0}, ${parentNode.y0})`;
     })
     .on('click', onClick(config));
 
@@ -109,7 +108,7 @@ export function render(config) {
     .style('cursor', getCursorForNode);
 
   let namePos = {
-    x: nodeWidth / 4,
+    x: nodeWidth / 2,
     y: nodePaddingY * 1.8 + avatarWidth,
   };
 
@@ -135,7 +134,7 @@ export function render(config) {
   nodeEnter
     .append('text')
     .attr('class', `${ENTITY_TITLE_CLASS} unedited`)
-    .attr('x', 0)
+    .attr('x', nodeWidth / 2)
     .attr('y', namePos.y + nodePaddingY + titleYTopDistance)
     .attr('dy', '0.1em')
     .style('font-size', titleFontSize)
@@ -147,7 +146,7 @@ export function render(config) {
   nodeEnter
     .append('text')
     .attr('class', `${COUNTS_CLASS} unedited`)
-    .attr('x', nodeWidth / 3)
+    .attr('x', nodeWidth / 2)
     .attr('y', namePos.y + nodePaddingY + countYTopDistance)
     .attr('dy', '.9em')
     .style('font-size', countFontSize)
@@ -190,7 +189,10 @@ export function render(config) {
   nodeUpdate
     .transition()
     .duration(animationDuration)
-    .attr('transform', d => `translate(${d.x},${d.y})`);
+    .attr('transform', d => {
+      console.log(d);
+      return `translate(${d.x},${d.y})`;
+    });
 
   nodeUpdate.select('rect.box').attr('fill', backgroundColor).attr('stroke', borderColor);
 
@@ -210,9 +212,9 @@ export function render(config) {
   [
     { cls: ENTITY_NAME_CLASS, max: maxNameWordLength },
     { cls: ENTITY_TITLE_CLASS, max: maxTitleWordLength },
-    { cls: ENTITY_SUB_TITLE_CLASS, max: maxSubTitleWordLength },
     { cls: COUNTS_CLASS, max: maxCountWordLength },
   ].forEach(({ cls, max }) => {
+    // svg.selectAll(`text.unedited.${cls}`).call(wrapText);
     svg.selectAll(`text.unedited.${cls}`).call(
       wrapText,
       nodeWidth - 12, // Adjust with some padding
@@ -231,10 +233,6 @@ export function render(config) {
     .selectAll(`text.${ENTITY_TITLE_CLASS}`)
     .append('svg:title')
     .text(d => (getTitle ? getTitle(d) : helpers.getTitle(d)));
-  svg
-    .selectAll(`text.${ENTITY_SUB_TITLE_CLASS}`)
-    .append('svg:title')
-    .text(d => (getSubTitle ? getSubTitle(d) : helpers.getSubTitle(d)));
   svg
     .selectAll(`text.${COUNTS_CLASS}`)
     .append('svg:title')

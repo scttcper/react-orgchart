@@ -1,7 +1,7 @@
 import React from 'react';
 import { arrayToTree } from 'performant-array-to-tree';
 
-import OrgChart from '../src/react/org-chart';
+import { OrgChart } from '../src/react/org-chart';
 // import { tree } from './Tree';
 import { data } from './testdata';
 
@@ -12,8 +12,6 @@ const tree = arrayToTree(
   data.map(x => ({ ...x, entity: { ...x, avatar: avatarPersonnel }, parentId: x.reportsTo?.id })),
   { dataField: null },
 );
-
-console.log(tree);
 
 export default class App extends React.Component {
   render() {

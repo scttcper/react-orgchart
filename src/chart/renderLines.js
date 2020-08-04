@@ -43,7 +43,6 @@ export function renderLines(config) {
     .attr('stroke-opacity', 1)
     .attr('stroke-width', 1.25)
     .attr('d', d => {
-      // console.log('xxx', d.source.x, d.source.x0);
       const linePoints = [
         {
           x: d.source.x + parseInt(nodeWidth / 2, 10),
@@ -62,7 +61,6 @@ export function renderLines(config) {
           y: d.source.y + nodeHeight + 2,
         },
       ];
-      // console.log(d.source.x, parseInt(nodeWidth / 2, 10));
 
       return angle(linePoints);
     });
