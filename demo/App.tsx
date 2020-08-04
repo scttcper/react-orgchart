@@ -22,10 +22,6 @@ export default class App extends React.Component {
     };
   }
 
-  handleDownload = () => {
-    this.setState({ downloadingChart: false });
-  };
-
   handleOnChangeConfig = config => {
     this.setState({ config: config });
   };
@@ -36,8 +32,6 @@ export default class App extends React.Component {
   };
 
   render() {
-    const { downloadingChart } = this.state;
-
     // For downloading org chart as image or pdf based on id
     return (
       <>
@@ -61,17 +55,6 @@ export default class App extends React.Component {
         <OrgChart
           tree={tree[0]}
           loadConfig={() => this.state.config}
-          downloadedOrgChart={d => {
-            this.handleDownload();
-          }}
-          loadParent={d => {
-            const parentData = this.getParent(d);
-            return parentData;
-          }}
-          loadChildren={d => {
-            const childrenData = this.getChild(d.id);
-            return childrenData;
-          }}
           onConfigChange={config => this.setState({ config })}
         />
       </>

@@ -2,9 +2,8 @@ let d3 = require('d3');
 import { wrapText, covertImageToBase64, getCursorForNode } from '../utils';
 import * as helpers from '../utils';
 let renderLines = require('./renderLines');
-let onClick = require('./onClick');
+import { onClick } from './onClick';
 import { iconLink } from './components/iconLink';
-let supervisorIcon = require('./components/supervisorIcon');
 
 const CHART_NODE_CLASS = 'org-chart-node';
 const ENTITY_LINK_CLASS = 'org-chart-entity-link';
@@ -35,7 +34,6 @@ function render(config) {
     treeData,
     sourceNode,
     onEntityLinkClick,
-    loadImage,
     elemWidth,
     margin,
     onConfigChange,
@@ -79,16 +77,6 @@ function render(config) {
   );
 
   let parentNode = sourceNode || treeData;
-
-  svg.selectAll('#supervisorIcon').remove();
-
-  supervisorIcon({
-    svg: svg,
-    config,
-    treeData,
-    x: 70,
-    y: -24,
-  });
 
   // Enter any new nodes at the parent's previous position.
   let nodeEnter = node

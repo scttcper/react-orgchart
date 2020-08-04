@@ -1,19 +1,14 @@
 const d3 = require('d3');
 import { collapse } from '../utils';
 
-module.exports = onClick;
-
-function onClick(configOnClick) {
-  const { loadConfig } = configOnClick;
-
+export function onClick(config) {
   return datum => {
-    if (d3.event.defaultPrevented) {
-      return;
-    }
+    // if (d3.event.defaultPrevented) {
+    //   return;
+    // }
 
-    const config = loadConfig();
-    const { loadChildren, render, onEntityClick } = config;
-    event.preventDefault();
+    const { render, onEntityClick } = config;
+    // event.preventDefault();
 
     if (onEntityClick) {
       const result = onEntityClick(datum, d3.event);
@@ -23,27 +18,6 @@ function onClick(configOnClick) {
       if (typeof result === 'boolean' && !result) {
         return;
       }
-    }
-
-    // If this entity doesn't have children but `hasChild` is true,
-    // attempt to load using the `loadChildren` config function
-    if (!datum.children && !datum._children && datum.hasChild) {
-      if (!loadChildren) {
-        console.error(
-          'react-org-chart.onClick: loadChildren() not found in config',
-        );
-        return;
-      }
-
-      const result = loadChildren(datum);
-      const handler = handleChildrenResult(config, datum);
-
-      // Check if the result is a promise and render the children
-      if (result.then) {
-        return result.then(handler);
-      }
-
-      return handler(result);
     }
 
     if (datum.children) {
