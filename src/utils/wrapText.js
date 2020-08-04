@@ -1,4 +1,4 @@
-import d3 from 'd3';
+import * as d3 from 'd3';
 import truncate from 'lodash.truncate';
 
 let getTruncatedText = (text, maxWordLength) => truncate(text, { length: maxWordLength });

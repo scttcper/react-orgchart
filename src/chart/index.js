@@ -50,7 +50,11 @@ export function init(options) {
   const elemHeight = elem.offsetHeight;
 
   // Setup the d3 tree layout
-  config.tree = d3.layout.tree().nodeSize([nodeWidth + nodeSpacing, nodeHeight + nodeSpacing]);
+  config.tree = d3.hierarchy(treeData, function (d) {
+    return d.children;
+  });
+  config.treeMap = d3.tree(config.tree).nodeSize([nodeWidth + nodeSpacing, nodeHeight + nodeSpacing]);
+  console.log('treemap', config.treeMap);
 
   // Calculate width of a node with expanded children
   // const childrenWidth = parseInt((treeData.children.length * nodeWidth) / 2)
@@ -83,9 +87,6 @@ export function init(options) {
   treeData.x0 = 0;
   treeData.y0 = elemHeight / 2;
 
-  // Collapse all of the children on initial load
-  treeData.children.forEach(collapse);
-
   // Connect core variables to config so that they can be
   // used in internal rendering functions
   config.svg = svg;
@@ -95,7 +96,7 @@ export function init(options) {
   config.render = render;
 
   // Defined zoom behavior
-  var zoom = d3.behavior.zoom().scaleExtent([0.1, 1.5]).duration(50).on('zoom', zoomed);
+  let zoom = d3.zoom().scaleExtent([0.1, 1.5]).duration(50).on('zoom', zoomed);
 
   let zoomedRoot = svgroot.call(zoom);
 
@@ -114,11 +115,14 @@ export function init(options) {
   }
 
   // Define the point of origin for zoom transformations
-  zoom.translate([centerPoint, 20]);
+  // debugger
+  // zoom.translate.x(centerPoint);
+  // zoom.translate.y(20);
 
   // Zoom update
   function zoomed() {
-    svg.attr('transform', 'translate(' + zoom.translate() + ')' + 'scale(' + zoom.scale() + ')');
+    // svg.attr('transform', 'translate(' + zoom.translate() + ')' + 'scale(' + zoom.scale() + ')');
+    svg.attr('transform', d3.event.transform);
   }
 
   // To update translate and scale of zoom

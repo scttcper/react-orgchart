@@ -3,6 +3,7 @@ import * as helpers from '../utils';
 import { renderLines } from './renderLines';
 import { onClick } from './onClick';
 import { iconLink } from './components/iconLink';
+import { collapse } from '../utils';
 
 const CHART_NODE_CLASS = 'org-chart-node';
 const ENTITY_LINK_CLASS = 'org-chart-entity-link';
@@ -50,11 +51,17 @@ export function render(config) {
     onTitleClick,
     onSubTitleClick,
     onCountClick,
+    treeMap,
   } = config;
 
   // Compute the new tree layout.
-  let nodes = tree.nodes(treeData).reverse();
-  let links = tree.links(nodes);
+  const data = treeMap(tree);
+  let nodes = data.descendants();
+  let links = data.links();
+
+  // Collapse all of the children on initial load
+  nodes.forEach(collapse);
+  console.log(nodes);
 
   config.links = links;
   config.nodes = nodes;
@@ -65,10 +72,7 @@ export function render(config) {
   });
 
   // Update the nodes
-  let node = svg.selectAll('g.' + CHART_NODE_CLASS).data(
-    nodes.filter(d => d.id),
-    d => d.id,
-  );
+  let node = svg.selectAll('g.' + CHART_NODE_CLASS).data(nodes);
 
   let parentNode = sourceNode || treeData;
 
@@ -77,7 +81,10 @@ export function render(config) {
     .enter()
     .insert('g')
     .attr('class', CHART_NODE_CLASS)
-    .attr('transform', `translate(${parentNode.x0}, ${parentNode.y0})`)
+    .attr('transform', d => {
+      console.log(d);
+      return `translate(${d.x}, ${d.y})`;
+    })
     .on('click', onClick(config));
 
   // Entity Card Shadow
@@ -107,7 +114,7 @@ export function render(config) {
     .style('cursor', getCursorForNode);
 
   let namePos = {
-    x: nodeWidth / 2,
+    x: nodeWidth / 4,
     y: nodePaddingY * 1.8 + avatarWidth,
   };
 
@@ -133,7 +140,7 @@ export function render(config) {
   nodeEnter
     .append('text')
     .attr('class', `${ENTITY_TITLE_CLASS} unedited`)
-    .attr('x', nodeWidth / 2)
+    .attr('x', 0)
     .attr('y', namePos.y + nodePaddingY + titleYTopDistance)
     .attr('dy', '0.1em')
     .style('font-size', titleFontSize)
@@ -142,24 +149,11 @@ export function render(config) {
     .text(d => (typeof getTitle === 'function' ? getTitle(d) : helpers.getTitle(d)))
     .on('click', helpers.customOnClick(onTitleClick, onClick, config));
 
-  // SubTitle
-  nodeEnter
-    .append('text')
-    .attr('class', `${ENTITY_SUB_TITLE_CLASS} unedited`)
-    .attr('x', nodeWidth / 2)
-    .attr('y', namePos.y + nodePaddingY + subtitleYTopDistance)
-    .attr('dy', '0.1em')
-    .style('font-size', subTitleFontSize)
-    .style('cursor', 'pointer')
-    .style('fill', titleColor)
-    .text(d => (typeof getSubTitle === 'function' ? getSubTitle(d) : helpers.getSubTitle(d)))
-    .on('click', helpers.customOnClick(onSubTitleClick, onClick, config));
-
   // Count
   nodeEnter
     .append('text')
     .attr('class', `${COUNTS_CLASS} unedited`)
-    .attr('x', nodeWidth / 2)
+    .attr('x', nodeWidth / 3)
     .attr('y', namePos.y + nodePaddingY + countYTopDistance)
     .attr('dy', '.9em')
     .style('font-size', countFontSize)
@@ -178,16 +172,16 @@ export function render(config) {
     .attr('x', avatarPos.x)
     .attr('y', avatarPos.y)
     .attr('stroke', borderColor)
-    .attr('src', d => d.entity.avatar)
-    .attr('href', d => d.entity.avatar)
+    .attr('src', d => d.data.entity.avatar)
+    .attr('href', d => d.data.entity.avatar)
     .attr('clip-path', 'url(#avatarClip)');
 
   // Entity's Link
   let nodeLink = nodeEnter
     .append('a')
     .attr('class', ENTITY_LINK_CLASS)
-    .attr('display', d => (d.entity.link ? '' : 'none'))
-    .attr('xlink:href', d => d.entity.link)
+    .attr('display', d => (d.data.entity.link ? '' : 'none'))
+    .attr('xlink:href', d => d.data.entity.link)
     .on('click', helpers.customOnClick(onEntityLinkClick, onClick, config));
 
   iconLink({

@@ -35,7 +35,7 @@
     ]
   },
   "dependencies": {
-    "d3": "^3.5.17",
+    "d3": "^4.13.0",
     "lodash.truncate": "4.4.2"
   },
   "peerDependencies": {
@@ -50,7 +50,7 @@
     "@pika/plugin-ts-standard-pkg": "0.9.2",
     "@testing-library/jest-dom": "5.11.2",
     "@testing-library/react": "10.4.7",
-    "@types/d3": "3.5.43",
+    "@types/d3": "4.13.2",
     "@types/jest": "26.0.8",
     "@types/node": "14.0.27",
     "@types/react": "16.9.44",

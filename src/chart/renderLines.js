@@ -1,4 +1,4 @@
-import d3 from 'd3';
+import * as d3 from 'd3';
 
 export function renderLines(config = {}) {
   const {
@@ -23,16 +23,16 @@ export function renderLines(config = {}) {
   );
 
   // Define the curved line function
-  const curve = d3.svg
-    .diagonal()
-    .projection(d => [d.x + nodeWidth / 2, d.y + nodeHeight / 2]);
+  const curve = d3.line()
+    .x(d => d.x + nodeWidth / 2)
+    .y(d => d.y + nodeHeight / 2)
+    .curve(d3.curveLinear);
 
   // Define the angled line function
-  const angle = d3.svg
-    .line()
+  const angle = d3.line()
     .x(d => d.x)
     .y(d => d.y)
-    .interpolate('linear');
+    .curve(d3.curveLinear);
 
   if (lineType === 'angle') {
     // Enter any new links at the parent's previous position.

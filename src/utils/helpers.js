@@ -1,11 +1,11 @@
-export const getName = data => data.entity?.name;
+export const getName = data => data.data.entity?.name;
 
-export const getTitle = data => data.entity?.title;
+export const getTitle = data => data.data.entity?.title;
 
-export const getSubTitle = data => data.entity?.subTitle;
+export const getSubTitle = data => data.data.entity?.subTitle;
 
 export const getCount = data => {
-  let children = data.children?.length ?? data._children?.length;
+  let children = data.data.children?.length ?? data.data._children?.length;
   if (!children) {
     return '';
   }
@@ -14,7 +14,7 @@ export const getCount = data => {
 };
 
 export const getCursorForNode = data =>
-  data.children || data._children || data.hasChild ?
+  data.data.children || data.data._children || data.data.hasChild ?
     'pointer' :
     'default';
 

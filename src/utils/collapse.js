@@ -1,8 +1,8 @@
-export function collapse(node) {
+export function collapse(d) {
   // Check if this node has children
-  if (node.children) {
-    node._children = node.children;
-    node._children.forEach(collapse);
-    node.children = null;
+  console.log('coll', d);
+  if (d.children) {
+    d._children = d.children;
+    d.children = null;
   }
 }
