@@ -31,19 +31,19 @@ export default class App extends React.Component {
     return (
       <>
         <div className="org-chart-zoom-buttons">
-          <button className="btn btn-outline-primary org-chart-zoom-button" id="org-chart-zoom-in">
+          <button className="org-chart-zoom-button" id="org-chart-zoom-in">
             Zoom In
           </button>
-          <button className="btn btn-outline-primary org-chart-zoom-button" id="org-chart-zoom-out">
+          <button className="org-chart-zoom-button" id="org-chart-zoom-out">
             Zoom Out
           </button>
           <button
-            className="btn btn-outline-primary org-chart-zoom-button"
+            className="org-chart-zoom-button"
             id="org-chart-scale-to-fit"
           >
             Scale to Fit
           </button>
-          <button className="btn btn-outline-primary org-chart-zoom-button" id="org-chart-reset">
+          <button className="org-chart-zoom-button" id="org-chart-reset">
             Reset
           </button>
         </div>

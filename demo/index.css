@@ -8,6 +8,7 @@ body {
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   -webkit-font-smoothing: antialiased;
 }
+
 #root,
 #react-org-chart {
   margin: 0;
@@ -35,49 +36,9 @@ body {
   left: 0;
 }
 
-.org-chart-download-buttons {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
 .org-chart-zoom-button {
   width: 100px;
   height: 40px;
   display: block !important;
   margin: 8px;
-}
-
-.btn {
-  font-size: 0.875rem;
-  text-transform: none;
-  text-decoration-line: none;
-  display: inline-block;
-  font-weight: 600;
-  text-align: center;
-  vertical-align: middle;
-  user-select: none;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  border-radius: 0.125rem;
-  cursor: pointer;
-  margin: 6px;
-}
-
-.btn-outline-primary {
-  color: #374ea2;
-  border-color: #374ea2;
-}
-
-.btn-outline-primary:not(:disabled):not(.disabled):active {
-  color: #fff;
-  background-color: #374ea2;
-  border-color: #374ea2;
-}
-
-.github-link {
-  font-size: 16px;
-  margin-left: 8px;
-  margin-right: 16px;
 }
