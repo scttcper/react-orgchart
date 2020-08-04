@@ -20,9 +20,11 @@ export const getCursorForNode = data =>
 
 export const customOnClick = (fn, onClick, config) => data => {
   if (typeof fn === 'function') {
+    // eslint-disable-next-line no-restricted-globals
     if (fn(data, event)) {
       onClick(config);
     } else {
+    // eslint-disable-next-line no-restricted-globals
       event.stopPropagation();
     }
   }

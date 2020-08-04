@@ -94,7 +94,7 @@ export function renderLines(config) {
     .exit()
     .transition()
     .duration(animationDuration)
-    .attr('d', d => {
+    .attr('d', () => {
       const lineNode = config.sourceNode ? config.sourceNode : parentNode;
       const linePoints = [
         {

@@ -2,10 +2,12 @@ export function onClick(config) {
   const {render} = config;
 
   return datum => {
+    // eslint-disable-next-line no-restricted-globals
     if (event.defaultPrevented) {
       return;
     }
 
+    // eslint-disable-next-line no-restricted-globals
     const link = event?.target?.closest('a');
     if (link?.href) {
       return;

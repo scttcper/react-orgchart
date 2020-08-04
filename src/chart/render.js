@@ -194,7 +194,7 @@ export function render(config) {
     .exit()
     .transition()
     .duration(animationDuration)
-    .attr('transform', d => `translate(${parentNode.x},${parentNode.y})`)
+    .attr('transform', () => `translate(${parentNode.x},${parentNode.y})`)
     .remove();
 
   // Update the links
