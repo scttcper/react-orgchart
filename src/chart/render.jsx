@@ -1,7 +1,6 @@
-let d3 = require('d3');
-import { wrapText, covertImageToBase64, getCursorForNode } from '../utils';
+import { wrapText, getCursorForNode } from '../utils';
 import * as helpers from '../utils';
-let renderLines = require('./renderLines');
+import { renderLines } from './renderLines';
 import { onClick } from './onClick';
 import { iconLink } from './components/iconLink';
 
@@ -13,15 +12,13 @@ const ENTITY_SUB_TITLE_CLASS = 'org-chart-entity-sub-title';
 const ENTITY_HIGHLIGHT = 'org-chart-entity-highlight';
 const COUNTS_CLASS = 'org-chart-counts';
 
-function render(config) {
+export function render(config) {
   const {
-    svgroot,
     svg,
     tree,
     animationDuration,
     nodeWidth,
     nodeHeight,
-    nodePaddingX,
     nodePaddingY,
     nodeBorderRadius,
     backgroundColor,
@@ -34,9 +31,6 @@ function render(config) {
     treeData,
     sourceNode,
     onEntityLinkClick,
-    elemWidth,
-    margin,
-    onConfigChange,
     nameFontSize = 14,
     titleFontSize = 13,
     titleYTopDistance = 42,
@@ -211,7 +205,7 @@ function render(config) {
   nodeUpdate.select('rect.box').attr('fill', backgroundColor).attr('stroke', borderColor);
 
   // Transition exiting nodes to the parent's new position.
-  let nodeExit = node
+  node
     .exit()
     .transition()
     .duration(animationDuration)
@@ -219,7 +213,7 @@ function render(config) {
     .remove();
 
   // Update the links
-  let link = svg.selectAll('path.link').data(links, d => d.target.id);
+  svg.selectAll('path.link').data(links, d => d.target.id);
 
   [
     { cls: ENTITY_NAME_CLASS, max: maxNameWordLength },
@@ -275,8 +269,4 @@ function render(config) {
   config.nodeRightX = nodeRightX;
   config.nodeY = nodeY;
   config.nodeLeftX = nodeLeftX * -1;
-
-  onConfigChange(config);
 }
-
-module.exports = render;

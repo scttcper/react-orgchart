@@ -14,18 +14,6 @@ const tree = arrayToTree(
 );
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      config: {},
-    };
-  }
-
-  handleOnChangeConfig = config => {
-    this.setState({ config: config });
-  };
-
   render() {
     // For downloading org chart as image or pdf based on id
     return (
@@ -43,7 +31,6 @@ export default class App extends React.Component {
         </div>
         <OrgChart
           tree={tree[0]}
-          onConfigChange={config => this.setState({ config })}
         />
       </>
     );

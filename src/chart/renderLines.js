@@ -1,8 +1,6 @@
-const d3 = require('d3');
+import d3 from 'd3';
 
-module.exports = renderLines;
-
-function renderLines(config = {}) {
+export function renderLines(config = {}) {
   const {
     svg,
     links,

@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { collapse } from '../utils';
-import render from './render';
+import { render } from './render';
 import defaultConfig from './config';
 
 export function init(options) {
