@@ -41,4 +41,4 @@ const config = {
   shouldResize,
 };
 
-module.exports = config;
+export default config;
