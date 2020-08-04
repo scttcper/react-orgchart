@@ -37,12 +37,6 @@ export default class App extends React.Component {
           <button className="org-chart-zoom-button" id="org-chart-zoom-out">
             Zoom Out
           </button>
-          <button
-            className="org-chart-zoom-button"
-            id="org-chart-scale-to-fit"
-          >
-            Scale to Fit
-          </button>
           <button className="org-chart-zoom-button" id="org-chart-reset">
             Reset
           </button>

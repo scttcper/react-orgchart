@@ -7,7 +7,7 @@ export function onClick(config) {
       return;
     }
 
-    const link = event.target.closest('a');
+    const link = event?.target?.closest('a');
     if (link?.href) {
       return;
     }

@@ -27,9 +27,7 @@ export function init(options) {
     shouldResize,
     zoomInId,
     zoomOutId,
-    scaleToFitId,
     resetId,
-    loadConfig,
     disableCanvasMouseWheelZoom,
     disableCanvasMouseMove,
   } = config;
@@ -139,34 +137,6 @@ export function init(options) {
       });
   }
 
-  // Zoom extent to fit svg on the screen
-  function scaleToFit() {
-    const latestConfig = loadConfig();
-    const { nodeLeftX, nodeRightX, nodeWidth, nodeY, margin, elemHeight, elemWidth } = latestConfig;
-
-    const centerPoint = elemWidth / 2 - nodeWidth / 2 - margin.left / 2;
-    const svgWidth = nodeLeftX + nodeRightX;
-    const svgHeight = nodeY + nodeHeight * 2 + 48;
-
-    let scaleX = elemWidth / svgWidth - 0.03;
-    let scaleY = elemHeight / svgHeight - 0.06;
-    const chooseScale = scaleX < scaleY ? scaleX : scaleY;
-    let scale = svgWidth > elemWidth || svgHeight > elemHeight ? chooseScale : 1;
-    let translateX = nodeLeftX * scale + nodeWidth / 2;
-
-    if (svgWidth > elemWidth || svgHeight > elemHeight) {
-      // If width is more than height
-      if (scaleX < scaleY) {
-        interpolateZoom([translateX, 48], scale);
-        // If height is more than width
-      } else if (scaleX > scaleY) {
-        interpolateZoom([centerPoint, 48], scale);
-      }
-    } else {
-      interpolateZoom([centerPoint, 48], scale);
-    }
-  }
-
   function reset() {
     // Center to the original center point
     interpolateZoom([centerPoint, 48], 1);
@@ -180,7 +150,7 @@ export function init(options) {
 
   // Zoom on button click
   function zoomClick() {
-    var clicked = d3.event.target;
+    // var clicked = d3.event.target;
     var direction = 1;
     var factor = 0.2;
     var target_zoom = 1;
@@ -191,7 +161,7 @@ export function init(options) {
     var l = [];
     var view = { x: translate[0], y: translate[1], k: zoom.scale() };
 
-    d3.event.preventDefault();
+    // d3.event.preventDefault();
     direction = this.id === zoomInId ? 1 : -1;
     target_zoom = zoom.scale() * (1 + factor * direction);
 
@@ -212,7 +182,6 @@ export function init(options) {
   // d3 selects button on click
   d3.select(`#${zoomInId}`).on('click', zoomClick);
   d3.select(`#${zoomOutId}`).on('click', zoomClick);
-  d3.select(`#${scaleToFitId}`).on('click', scaleToFit);
   d3.select(`#${resetId}`).on('click', reset);
 
   // Add listener for when the browser or parent node resizes
@@ -231,26 +200,4 @@ export function init(options) {
 
   // Start initial render
   render(config);
-
-  // Update DOM root height
-  d3.select(id).style('height', elemHeight + margin.top + margin.bottom);
-
-  // Get the root
-  const orgChart = d3.select('root');
-
-  if (!d3.select(`${id}-canvas-container`)) {
-    // Creating  canvas and duplicate svg for image and PDF download
-    const canvasContainer = document.createElement('div');
-    canvasContainer.setAttribute('id', `${id}-canvas-container`);
-    canvasContainer.setAttribute('style', 'display:none;');
-    orgChart.append(canvasContainer);
-  }
-
-  if (!d3.select(`${id}-svg-container`)) {
-    // Duplicate svg container
-    const svgContainer = document.createElement('div');
-    svgContainer.setAttribute('id', `${id}-svg-container`);
-    svgContainer.setAttribute('style', 'display:none;');
-    orgChart.append(svgContainer);
-  }
 }
