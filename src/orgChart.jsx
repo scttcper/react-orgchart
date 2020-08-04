@@ -2,23 +2,19 @@ import React from 'react';
 
 import { init } from './chart';
 
+const defaultId = 'react-org-chart';
+
 export class OrgChart extends React.PureComponent {
   constructor() {
     super();
     this.anchor = React.createRef();
-
-    this.defaultProps = {
-      id: 'react-org-chart',
-      disableCanvasMouseMove: false,
-      disableCanvasMouseWheelZoom: false,
-    };
   }
 
   componentDidMount() {
     const {
-      id,
-      disableCanvasMouseMove,
-      disableCanvasMouseWheelZoom,
+      id = defaultId,
+      disableCanvasMouseMove = false,
+      disableCanvasMouseWheelZoom = false,
       tree,
       ...options
     } = this.props;
@@ -34,7 +30,7 @@ export class OrgChart extends React.PureComponent {
   }
 
   render() {
-    const { id } = this.props;
+    const { id = defaultId } = this.props;
 
     return React.createElement('div', {
       id,
