@@ -1,4 +1,7 @@
-import * as d3 from 'd3';
+import { select } from 'd3-selection';
+import { zoom as zoomer, zoomIdentity } from 'd3-zoom';
+import { tree, hierarchy } from 'd3-hierarchy';
+import { event } from 'd3-selection';
 import { collapse } from '../utils';
 import { render } from './render';
 import defaultConfig from './config';
@@ -19,26 +22,18 @@ export function init(options) {
     id,
     elem,
     treeData,
-    lineType,
-    margin,
     nodeWidth,
     nodeHeight,
     nodeSpacing,
     shouldResize,
-    zoomInId,
-    zoomOutId,
-    resetId,
     disableCanvasMouseWheelZoom,
     disableCanvasMouseMove,
   } = config;
 
   // Calculate how many pixel nodes to be spaced based on the
   // type of line that needs to be rendered
-  if (lineType == 'angle') {
-    config.lineDepthY = nodeHeight + 40;
-  } else {
-    config.lineDepthY = nodeHeight + 60;
-  }
+
+  config.lineDepthY = nodeHeight + 40;
 
   if (!elem) {
     throw new Error('No root elem');
@@ -50,15 +45,19 @@ export function init(options) {
   const elemHeight = elem.offsetHeight;
 
   // Setup the d3 tree layout
-  config.tree = d3.layout.tree().nodeSize([nodeWidth + nodeSpacing, nodeHeight + nodeSpacing]);
+  config.tree = hierarchy(treeData, function (d) {
+    return d.children;
+  });
+  config.treeMap = tree(config.tree).nodeSize([nodeWidth + nodeSpacing, nodeHeight + nodeSpacing]);
+  // Collapse tree on load
+  config.treeMap(config.tree).descendants().slice(1).forEach(collapse);
 
   // Calculate width of a node with expanded children
   // const childrenWidth = parseInt((treeData.children.length * nodeWidth) / 2)
 
   // <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" xml:space="preserve" viewBox="0 0 193 260" enable-background=" new 0 0 193 260" height="260" width="193"
   // Add svg root for d3
-  const svgroot = d3
-    .select(id)
+  const svgroot = select(id)
     .append('svg')
     .attr('id', 'svg')
     .attr('xmlns', 'http://www.w3.org/2000/svg')
@@ -72,19 +71,11 @@ export function init(options) {
     .attr('height', elemHeight);
 
   // Graph center point
-  const centerPoint = elemWidth / 2 - nodeWidth / 2 - margin.left / 2;
+  const centerPoint = elemWidth / 2 - nodeWidth / 2 + 15;
+  console.log({ centerPoint });
 
   // Add our base svg group to transform when a user zooms/pans
-  const svg = svgroot.append('g').attr('transform', 'translate(' + centerPoint + ',' + 48 + ')');
-
-  // Define box shadow and avatar border radius
-
-  // Center the viewport on initial load
-  treeData.x0 = 0;
-  treeData.y0 = elemHeight / 2;
-
-  // Collapse all of the children on initial load
-  treeData.children.forEach(collapse);
+  const svg = svgroot.append('g');
 
   // Connect core variables to config so that they can be
   // used in internal rendering functions
@@ -95,9 +86,15 @@ export function init(options) {
   config.render = render;
 
   // Defined zoom behavior
-  var zoom = d3.behavior.zoom().scaleExtent([0.1, 1.5]).duration(50).on('zoom', zoomed);
+  const zoom = zoomer().scaleExtent([0.1, 1.5]).duration(50).on('zoom', () => {
+    svg.attr('transform', () => {
+      return event.transform;
+    });
+  });
 
-  let zoomedRoot = svgroot.call(zoom);
+  svg.call(zoom.transform, zoomIdentity.translate(centerPoint, 48).scale(0.8));
+
+  const zoomedRoot = svgroot.call(zoom);
 
   // Disable the Mouse Wheel Zooming
   if (disableCanvasMouseWheelZoom) {
@@ -112,77 +109,6 @@ export function init(options) {
       .on('touchmove.zoom', null)
       .on('touchend.zoom', null);
   }
-
-  // Define the point of origin for zoom transformations
-  zoom.translate([centerPoint, 20]);
-
-  // Zoom update
-  function zoomed() {
-    svg.attr('transform', 'translate(' + zoom.translate() + ')' + 'scale(' + zoom.scale() + ')');
-  }
-
-  // To update translate and scale of zoom
-  function interpolateZoom(translate, scale) {
-    var self = this;
-    return d3
-      .transition()
-      .duration(350)
-      .tween('zoom', function () {
-        var iTranslate = d3.interpolate(zoom.translate(), translate);
-        var iScale = d3.interpolate(zoom.scale(), scale);
-        return function (t) {
-          zoom.scale(iScale(t)).translate(iTranslate(t));
-          zoomed();
-        };
-      });
-  }
-
-  function reset() {
-    // Center to the original center point
-    interpolateZoom([centerPoint, 48], 1);
-
-    // Collapse all of the children on initial load
-    if (treeData && treeData.children) {
-      treeData.children.forEach(collapse);
-      render(config);
-    }
-  }
-
-  // Zoom on button click
-  function zoomClick() {
-    // var clicked = d3.event.target;
-    var direction = 1;
-    var factor = 0.2;
-    var target_zoom = 1;
-    var center = [elemWidth / 2, elemHeight / 2];
-    var extent = zoom.scaleExtent();
-    var translate = zoom.translate();
-    var translate0 = [];
-    var l = [];
-    var view = { x: translate[0], y: translate[1], k: zoom.scale() };
-
-    // d3.event.preventDefault();
-    direction = this.id === zoomInId ? 1 : -1;
-    target_zoom = zoom.scale() * (1 + factor * direction);
-
-    if (target_zoom < extent[0] || target_zoom > extent[1]) {
-      return false;
-    }
-
-    translate0 = [(center[0] - view.x) / view.k, (center[1] - view.y) / view.k];
-    view.k = target_zoom;
-    l = [translate0[0] * view.k + view.x, translate0[1] * view.k + view.y];
-
-    view.x += center[0] - l[0];
-    view.y += center[1] - l[1];
-
-    interpolateZoom([view.x, view.y], view.k);
-  }
-
-  // d3 selects button on click
-  d3.select(`#${zoomInId}`).on('click', zoomClick);
-  d3.select(`#${zoomOutId}`).on('click', zoomClick);
-  d3.select(`#${resetId}`).on('click', reset);
 
   // Add listener for when the browser or parent node resizes
   const resize = () => {

@@ -7,39 +7,22 @@ body {
   font-family: 'SF UI Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   -webkit-font-smoothing: antialiased;
+  background-color: aliceblue;
 }
 
 
-.react-org-chart {
-  margin: 0;
+#root {
+  margin: auto;
   cursor: move;
-  display: block;
   height: 100vh;
   width: 100vw;
-  /* background-color: #f7f9fa; */
+  background-color: #fff;
+  overflow: hidden;
 }
-.org-chart-entity-name {
-  font-weight: 500;
-}
-.org-chart-entity-title {
-  font-weight: 600;
-}
+
 .org-chart-entity-link:hover g {
   fill: #409cf9 !important;
 }
 .org-chart-node .org-chart-counts {
   fill: #409cf9 !important;
-}
-
-.org-chart-zoom-buttons {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.org-chart-zoom-button {
-  width: 100px;
-  height: 40px;
-  display: block !important;
-  margin: 8px;
 }

@@ -8,7 +8,6 @@ const CHART_NODE_CLASS = 'org-chart-node';
 const ENTITY_LINK_CLASS = 'org-chart-entity-link';
 const ENTITY_NAME_CLASS = 'org-chart-entity-name';
 const ENTITY_TITLE_CLASS = 'org-chart-entity-title';
-const ENTITY_SUB_TITLE_CLASS = 'org-chart-entity-sub-title';
 const ENTITY_HIGHLIGHT = 'org-chart-entity-highlight';
 const COUNTS_CLASS = 'org-chart-counts';
 
@@ -28,33 +27,31 @@ export function render(config) {
     borderColor,
     avatarWidth,
     lineDepthY,
-    treeData,
     sourceNode,
     onEntityLinkClick,
     nameFontSize = 14,
     titleFontSize = 13,
-    titleYTopDistance = 42,
-    subTitleFontSize = 12,
-    subtitleYTopDistance = 63,
+    titleYTopDistance = 25,
     countFontSize = 14,
     countYTopDistance = 72,
     maxNameWordLength = 16,
     maxTitleWordLength = 17,
-    maxSubTitleWordLength = 19,
     maxCountWordLength = 17,
     getName,
     getTitle,
-    getSubTitle,
     getCount,
     onNameClick,
-    onTitleClick,
-    onSubTitleClick,
     onCountClick,
+    treeMap,
   } = config;
 
   // Compute the new tree layout.
-  let nodes = tree.nodes(treeData).reverse();
-  let links = tree.links(nodes);
+  const data = treeMap(tree);
+  const nodes = data.descendants();
+  const links = data.links();
+
+  // Collapse all of the children on initial load
+  // nodes.forEach(collapse);
 
   config.links = links;
   config.nodes = nodes;
@@ -65,19 +62,17 @@ export function render(config) {
   });
 
   // Update the nodes
-  let node = svg.selectAll('g.' + CHART_NODE_CLASS).data(
-    nodes.filter(d => d.id),
-    d => d.id,
-  );
-
-  let parentNode = sourceNode || treeData;
+  let node = svg.selectAll('g.' + CHART_NODE_CLASS).data(nodes, n => n.data.id);
+  let parentNode = sourceNode || nodes[0];
 
   // Enter any new nodes at the parent's previous position.
-  let nodeEnter = node
+  const nodeEnter = node
     .enter()
-    .insert('g')
+    .append('g')
     .attr('class', CHART_NODE_CLASS)
-    .attr('transform', `translate(${parentNode.x0}, ${parentNode.y0})`)
+    .attr('transform', () => {
+      return `translate(${parentNode.x0 ?? parentNode.x}, ${parentNode.y0 ?? parentNode.y})`;
+    })
     .on('click', onClick(config));
 
   // Entity Card Shadow
@@ -99,7 +94,7 @@ export function render(config) {
     .attr('class', d => (d.isHighlight ? `${ENTITY_HIGHLIGHT} box` : 'box'))
     .attr('width', nodeWidth)
     .attr('height', nodeHeight)
-    .attr('id', d => d.id)
+    .attr('id', d => d.data.id)
     .attr('fill', backgroundColor)
     .attr('stroke', borderColor)
     .attr('rx', nodeBorderRadius)
@@ -139,21 +134,7 @@ export function render(config) {
     .style('font-size', titleFontSize)
     .style('cursor', 'pointer')
     .style('fill', titleColor)
-    .text(d => (typeof getTitle === 'function' ? getTitle(d) : helpers.getTitle(d)))
-    .on('click', helpers.customOnClick(onTitleClick, onClick, config));
-
-  // SubTitle
-  nodeEnter
-    .append('text')
-    .attr('class', `${ENTITY_SUB_TITLE_CLASS} unedited`)
-    .attr('x', nodeWidth / 2)
-    .attr('y', namePos.y + nodePaddingY + subtitleYTopDistance)
-    .attr('dy', '0.1em')
-    .style('font-size', subTitleFontSize)
-    .style('cursor', 'pointer')
-    .style('fill', titleColor)
-    .text(d => (typeof getSubTitle === 'function' ? getSubTitle(d) : helpers.getSubTitle(d)))
-    .on('click', helpers.customOnClick(onSubTitleClick, onClick, config));
+    .text(d => (typeof getTitle === 'function' ? getTitle(d) : helpers.getTitle(d)));
 
   // Count
   nodeEnter
@@ -172,22 +153,22 @@ export function render(config) {
   // Entity's Avatar
   nodeEnter
     .append('image')
-    .attr('id', d => `image-${d.id}`)
+    .attr('id', d => `image-${d.data.id}`)
     .attr('width', avatarWidth)
     .attr('height', avatarWidth)
     .attr('x', avatarPos.x)
     .attr('y', avatarPos.y)
     .attr('stroke', borderColor)
-    .attr('src', d => d.entity.avatar)
-    .attr('href', d => d.entity.avatar)
+    .attr('src', d => d.data.entity.avatar)
+    .attr('href', d => d.data.entity.avatar)
     .attr('clip-path', 'url(#avatarClip)');
 
   // Entity's Link
   let nodeLink = nodeEnter
     .append('a')
     .attr('class', ENTITY_LINK_CLASS)
-    .attr('display', d => (d.entity.link ? '' : 'none'))
-    .attr('xlink:href', d => d.entity.link)
+    .attr('display', d => (d.data.entity.link ? '' : 'none'))
+    .attr('xlink:href', d => d.data.entity.link)
     .on('click', helpers.customOnClick(onEntityLinkClick, onClick, config));
 
   iconLink({
@@ -196,11 +177,15 @@ export function render(config) {
     y: 8,
   });
 
+  var nodeUpdate = nodeEnter.merge(node);
+
   // Transition nodes to their new position.
-  let nodeUpdate = node
+  nodeUpdate
     .transition()
     .duration(animationDuration)
-    .attr('transform', d => `translate(${d.x},${d.y})`);
+    .attr('transform', d => {
+      return `translate(${d.x},${d.y})`;
+    });
 
   nodeUpdate.select('rect.box').attr('fill', backgroundColor).attr('stroke', borderColor);
 
@@ -209,18 +194,20 @@ export function render(config) {
     .exit()
     .transition()
     .duration(animationDuration)
-    .attr('transform', d => `translate(${parentNode.x},${parentNode.y})`)
+    .attr('transform', () => `translate(${parentNode.x},${parentNode.y})`)
     .remove();
 
   // Update the links
-  svg.selectAll('path.link').data(links, d => d.target.id);
+  svg.selectAll('path.link').data(links, function (d) {
+    return d.id;
+  });
 
   [
     { cls: ENTITY_NAME_CLASS, max: maxNameWordLength },
     { cls: ENTITY_TITLE_CLASS, max: maxTitleWordLength },
-    { cls: ENTITY_SUB_TITLE_CLASS, max: maxSubTitleWordLength },
     { cls: COUNTS_CLASS, max: maxCountWordLength },
   ].forEach(({ cls, max }) => {
+    // Svg.selectAll(`text.unedited.${cls}`).call(wrapText);
     svg.selectAll(`text.unedited.${cls}`).call(
       wrapText,
       nodeWidth - 12, // Adjust with some padding
@@ -239,10 +226,6 @@ export function render(config) {
     .selectAll(`text.${ENTITY_TITLE_CLASS}`)
     .append('svg:title')
     .text(d => (getTitle ? getTitle(d) : helpers.getTitle(d)));
-  svg
-    .selectAll(`text.${ENTITY_SUB_TITLE_CLASS}`)
-    .append('svg:title')
-    .text(d => (getSubTitle ? getSubTitle(d) : helpers.getSubTitle(d)));
   svg
     .selectAll(`text.${COUNTS_CLASS}`)
     .append('svg:title')

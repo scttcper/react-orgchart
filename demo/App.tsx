@@ -1,7 +1,7 @@
 import React from 'react';
 import { arrayToTree } from 'performant-array-to-tree';
 
-import OrgChart from '../src/react/org-chart';
+import { OrgChart } from '../src';
 // import { tree } from './Tree';
 import { data } from './testdata';
 
@@ -17,22 +17,9 @@ export default class App extends React.Component {
   render() {
     // For downloading org chart as image or pdf based on id
     return (
-      <>
-        <div className="org-chart-zoom-buttons">
-          <button className="org-chart-zoom-button" id="org-chart-zoom-in">
-            Zoom In
-          </button>
-          <button className="org-chart-zoom-button" id="org-chart-zoom-out">
-            Zoom Out
-          </button>
-          <button className="org-chart-zoom-button" id="org-chart-reset">
-            Reset
-          </button>
-        </div>
-        <OrgChart
-          tree={tree[0]}
-        />
-      </>
+      <OrgChart
+        tree={tree[0]}
+      />
     );
   }
 }

@@ -1,11 +1,11 @@
-export const getName = data => data.entity?.name;
+export const getName = data => data.data.entity?.name;
 
-export const getTitle = data => data.entity?.title;
+export const getTitle = data => data.data.entity?.title;
 
-export const getSubTitle = data => data.entity?.subTitle;
+export const getSubTitle = data => data.data.entity?.subTitle;
 
 export const getCount = data => {
-  let children = data.children?.length ?? data._children?.length;
+  let children = data.data.children?.length ?? data.data._children?.length;
   if (!children) {
     return '';
   }
@@ -14,16 +14,18 @@ export const getCount = data => {
 };
 
 export const getCursorForNode = data =>
-  data.children || data._children || data.hasChild ?
+  data.data.children || data.data._children || data.data.hasChild ?
     'pointer' :
     'default';
 
 export const customOnClick = (fn, onClick, config) => data => {
   if (typeof fn === 'function') {
-    if (fn(data, d3.event)) {
+    // eslint-disable-next-line no-restricted-globals
+    if (fn(data, event)) {
       onClick(config);
     } else {
-      d3.event.stopPropagation();
+    // eslint-disable-next-line no-restricted-globals
+      event.stopPropagation();
     }
   }
 };
