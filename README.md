@@ -10,3 +10,8 @@ npm install @ctrl/react-orgchart
 
 ### Use
 
+```tsx
+import { OrgChart } from '@ctrl/react-orgchart';
+
+<OrgChart tree={tree} />
+```
