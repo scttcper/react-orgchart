@@ -19,7 +19,6 @@ export function init(options) {
   }
 
   const {
-    id,
     elem,
     treeData,
     nodeWidth,
