@@ -3,7 +3,6 @@ import * as helpers from '../utils';
 import { renderLines } from './renderLines';
 import { onClick } from './onClick';
 import { iconLink } from './components/iconLink';
-import { collapse } from '../utils';
 
 const CHART_NODE_CLASS = 'org-chart-node';
 const ENTITY_LINK_CLASS = 'org-chart-entity-link';
@@ -28,23 +27,18 @@ export function render(config) {
     borderColor,
     avatarWidth,
     lineDepthY,
-    treeData,
     sourceNode,
     onEntityLinkClick,
     nameFontSize = 14,
     titleFontSize = 13,
-    titleYTopDistance = 42,
-    subTitleFontSize = 12,
-    subtitleYTopDistance = 63,
+    titleYTopDistance = 25,
     countFontSize = 14,
     countYTopDistance = 72,
     maxNameWordLength = 16,
     maxTitleWordLength = 17,
-    maxSubTitleWordLength = 19,
     maxCountWordLength = 17,
     getName,
     getTitle,
-    getSubTitle,
     getCount,
     onNameClick,
     onCountClick,
@@ -77,7 +71,7 @@ export function render(config) {
     .append('g')
     .attr('class', CHART_NODE_CLASS)
     .attr('transform', () => {
-      return `translate(${parentNode.x0}, ${parentNode.y0})`;
+      return `translate(${parentNode.x0 ?? parentNode.x}, ${parentNode.y0 ?? parentNode.y})`;
     })
     .on('click', onClick(config));
 
@@ -190,7 +184,6 @@ export function render(config) {
     .transition()
     .duration(animationDuration)
     .attr('transform', d => {
-      console.log(d);
       return `translate(${d.x},${d.y})`;
     });
 

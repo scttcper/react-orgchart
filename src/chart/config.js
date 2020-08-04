@@ -9,12 +9,6 @@ const nodePaddingX = 16;
 const nodePaddingY = 16;
 const avatarWidth = 48;
 const nodeBorderRadius = 4;
-const margin = {
-  top: 20,
-  right: 20,
-  bottom: 20,
-  left: 20,
-};
 
 // Lines
 const lineDepthY = 120; /* Height of the line for child nodes */
@@ -30,7 +24,6 @@ const titleColor = '#645574';
 const reportsColor = '#92A0AD';
 
 const config = {
-  margin,
   animationDuration,
   nodeWidth,
   nodeHeight,

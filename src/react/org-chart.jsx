@@ -36,6 +36,7 @@ export class OrgChart extends React.PureComponent {
     return React.createElement('div', {
       id,
       ref: this.anchor,
+      style: { width: '100%', height: '100%' },
     });
   }
 }

@@ -1,4 +1,7 @@
-import * as d3 from 'd3';
+import { select } from 'd3-selection';
+import { zoom as zoomer, zoomIdentity } from 'd3-zoom';
+import { tree, hierarchy } from 'd3-hierarchy';
+import { event } from 'd3-selection';
 import { collapse } from '../utils';
 import { render } from './render';
 import defaultConfig from './config';
@@ -19,13 +22,10 @@ export function init(options) {
     id,
     elem,
     treeData,
-    margin,
     nodeWidth,
     nodeHeight,
     nodeSpacing,
     shouldResize,
-    zoomInId,
-    zoomOutId,
     disableCanvasMouseWheelZoom,
     disableCanvasMouseMove,
   } = config;
@@ -45,10 +45,10 @@ export function init(options) {
   const elemHeight = elem.offsetHeight;
 
   // Setup the d3 tree layout
-  config.tree = d3.hierarchy(treeData, function (d) {
+  config.tree = hierarchy(treeData, function (d) {
     return d.children;
   });
-  config.treeMap = d3.tree(config.tree).nodeSize([nodeWidth + nodeSpacing, nodeHeight + nodeSpacing]);
+  config.treeMap = tree(config.tree).nodeSize([nodeWidth + nodeSpacing, nodeHeight + nodeSpacing]);
   // Collapse tree on load
   config.treeMap(config.tree).descendants().slice(1).forEach(collapse);
 
@@ -57,8 +57,7 @@ export function init(options) {
 
   // <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" xml:space="preserve" viewBox="0 0 193 260" enable-background=" new 0 0 193 260" height="260" width="193"
   // Add svg root for d3
-  const svgroot = d3
-    .select(id)
+  const svgroot = select(id)
     .append('svg')
     .attr('id', 'svg')
     .attr('xmlns', 'http://www.w3.org/2000/svg')
@@ -72,16 +71,11 @@ export function init(options) {
     .attr('height', elemHeight);
 
   // Graph center point
-  const centerPoint = elemWidth / 2 - nodeWidth / 2 - margin.left / 2;
+  const centerPoint = elemWidth / 2 - nodeWidth / 2 + 15;
+  console.log({ centerPoint });
 
   // Add our base svg group to transform when a user zooms/pans
-  const svg = svgroot.append('g').attr('transform', 'translate(' + centerPoint + ',' + 48 + ')');
-
-  // Define box shadow and avatar border radius
-
-  // Center the viewport on initial load
-  // treeData.x0 = 0;
-  // treeData.y0 = elemHeight / 2;
+  const svg = svgroot.append('g');
 
   // Connect core variables to config so that they can be
   // used in internal rendering functions
@@ -92,9 +86,15 @@ export function init(options) {
   config.render = render;
 
   // Defined zoom behavior
-  let zoom = d3.zoom().scaleExtent([0.1, 1.5]).duration(50).on('zoom', zoomed);
+  const zoom = zoomer().scaleExtent([0.1, 1.5]).duration(50).on('zoom', () => {
+    svg.attr('transform', () => {
+      return event.transform;
+    });
+  });
 
-  let zoomedRoot = svgroot.call(zoom);
+  svg.call(zoom.transform, zoomIdentity.translate(centerPoint, 48).scale(0.8));
+
+  const zoomedRoot = svgroot.call(zoom);
 
   // Disable the Mouse Wheel Zooming
   if (disableCanvasMouseWheelZoom) {
@@ -108,17 +108,6 @@ export function init(options) {
       .on('touchstart.zoom', null)
       .on('touchmove.zoom', null)
       .on('touchend.zoom', null);
-  }
-
-  // Define the point of origin for zoom transformations
-  // debugger
-  // zoom.translate.x(centerPoint);
-  // zoom.translate.y(20);
-
-  // Zoom update
-  function zoomed() {
-    // svg.attr('transform', 'translate(' + zoom.translate() + ')' + 'scale(' + zoom.scale() + ')');
-    svg.attr('transform', d3.event.transform);
   }
 
   // Add listener for when the browser or parent node resizes

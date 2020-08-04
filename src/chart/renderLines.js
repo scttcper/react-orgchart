@@ -1,10 +1,11 @@
-import * as d3 from 'd3';
+import { line, curveLinear } from 'd3-shape';
+
+const margin = 10;
 
 export function renderLines(config) {
   const {
     svg,
     links,
-    margin,
     nodeWidth,
     nodeHeight,
     borderColor,
@@ -21,17 +22,11 @@ export function renderLines(config) {
       return `${source.data.id}-${target.data.id}`;
     });
 
-  // Define the curved line function
-  const curve = d3.line()
-    .x(d => d.x + nodeWidth / 2)
-    .y(d => d.y + nodeHeight / 2)
-    .curve(d3.curveLinear);
-
   // Define the angled line function
-  const angle = d3.line()
+  const angle = line()
     .x(d => d.x)
     .y(d => d.y)
-    .curve(d3.curveLinear);
+    .curve(curveLinear);
 
   // Enter any new links at the parent's previous position.
   var linkEnter = link
@@ -39,26 +34,26 @@ export function renderLines(config) {
     .insert('path', 'g')
     .attr('class', 'link')
     .attr('fill', 'none')
-    .attr('stroke', '#A9A9A9')
+    .attr('stroke', borderColor)
     .attr('stroke-opacity', 1)
     .attr('stroke-width', 1.25)
     .attr('d', d => {
       const linePoints = [
         {
           x: d.source.x + parseInt(nodeWidth / 2, 10),
-          y: d.source.y + nodeHeight + 2,
+          y: d.source.y + margin,
         },
         {
           x: d.source.x + parseInt(nodeWidth / 2, 10),
-          y: d.source.y + nodeHeight + 2,
+          y: d.source.y + margin,
         },
         {
           x: d.source.x + parseInt(nodeWidth / 2, 10),
-          y: d.source.y + nodeHeight + 2,
+          y: d.source.y + margin,
         },
         {
           x: d.source.x + parseInt(nodeWidth / 2, 10),
-          y: d.source.y + nodeHeight + 2,
+          y: d.source.y + margin,
         },
       ];
 
@@ -79,11 +74,11 @@ export function renderLines(config) {
         },
         {
           x: d.source.x + parseInt(nodeWidth / 2, 10),
-          y: d.target.y - margin.top / 2,
+          y: d.target.y - margin,
         },
         {
           x: d.target.x + parseInt(nodeWidth / 2, 10),
-          y: d.target.y - margin.top / 2,
+          y: d.target.y - margin,
         },
         {
           x: d.target.x + parseInt(nodeWidth / 2, 10),

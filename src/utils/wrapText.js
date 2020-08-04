@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import { select } from 'd3-selection';
 import truncate from 'lodash.truncate';
 
 let getTruncatedText = (text, maxWordLength) => truncate(text, { length: maxWordLength });
@@ -20,7 +20,7 @@ export function wrapText(
   let editedClass = '';
 
   text._groups[0].forEach(textNode => {
-    const text = d3.select(textNode);
+    const text = select(textNode);
     const x = text.attr('x');
     const y = text.attr('y');
     const dy = parseFloat(text.attr('dy'));
