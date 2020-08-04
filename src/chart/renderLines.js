@@ -1,4 +1,4 @@
-import {line, curveLinear} from 'd3-shape';
+import { line, curveLinear } from 'd3-shape';
 
 const margin = 10;
 
@@ -18,7 +18,7 @@ export function renderLines(config) {
 
   // Select all the links to render the lines
   const link = svg.selectAll('path.link')
-    .data(links, ({source, target}) => {
+    .data(links, ({ source, target }) => {
       return `${source.data.id}-${target.data.id}`;
     });
 

@@ -3,13 +3,16 @@ import React from 'react';
 import { init } from './chart';
 
 export class OrgChart extends React.PureComponent {
-  anchor = React.createRef();
+  constructor() {
+    super();
+    this.anchor = React.createRef();
 
-  static defaultProps = {
-    id: 'react-org-chart',
-    disableCanvasMouseMove: false,
-    disableCanvasMouseWheelZoom: false,
-  };
+    this.defaultProps = {
+      id: 'react-org-chart',
+      disableCanvasMouseMove: false,
+      disableCanvasMouseWheelZoom: false,
+    };
+  }
 
   componentDidMount() {
     const {

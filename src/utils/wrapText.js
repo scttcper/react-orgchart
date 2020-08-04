@@ -1,7 +1,7 @@
-import {select} from 'd3-selection';
+import { select } from 'd3-selection';
 import truncate from 'lodash.truncate';
 
-let getTruncatedText = (text, maxWordLength) => truncate(text, {length: maxWordLength});
+let getTruncatedText = (text, maxWordLength) => truncate(text, { length: maxWordLength });
 
 // One way of achieving text-wrapping capability in SVG
 // Text is broken down to words, each word is added to a line and then the lines width is checked
