@@ -17,10 +17,10 @@ export function renderLines(config = {}) {
   const parentNode = sourceNode || treeData;
 
   // Select all the links to render the lines
-  const link = svg.selectAll('path.link').data(
-    links.filter(link => link.source.id),
-    d => d.target.id,
-  );
+  const link = svg.selectAll('path.link')
+    .data(links, function (d) {
+      return d.id;
+    });
 
   // Define the curved line function
   const curve = d3.line()
@@ -36,7 +36,7 @@ export function renderLines(config = {}) {
 
   if (lineType === 'angle') {
     // Enter any new links at the parent's previous position.
-    link
+    var linkEnter = link
       .enter()
       .insert('path', 'g')
       .attr('class', 'link')
@@ -47,28 +47,31 @@ export function renderLines(config = {}) {
       .attr('d', d => {
         const linePoints = [
           {
-            x: d.source.x0 + parseInt(nodeWidth / 2, 10),
-            y: d.source.y0 + nodeHeight + 2,
+            x: d.source.x + parseInt(nodeWidth / 2, 10),
+            y: d.source.y + nodeHeight + 2,
           },
           {
-            x: d.source.x0 + parseInt(nodeWidth / 2, 10),
-            y: d.source.y0 + nodeHeight + 2,
+            x: d.source.x + parseInt(nodeWidth / 2, 10),
+            y: d.source.y + nodeHeight + 2,
           },
           {
-            x: d.source.x0 + parseInt(nodeWidth / 2, 10),
-            y: d.source.y0 + nodeHeight + 2,
+            x: d.source.x + parseInt(nodeWidth / 2, 10),
+            y: d.source.y + nodeHeight + 2,
           },
           {
-            x: d.source.x0 + parseInt(nodeWidth / 2, 10),
-            y: d.source.y0 + nodeHeight + 2,
+            x: d.source.x + parseInt(nodeWidth / 2, 10),
+            y: d.source.y + nodeHeight + 2,
           },
         ];
+        console.log(d.source.x, parseInt(nodeWidth / 2, 10));
 
         return angle(linePoints);
       });
 
+    var linkUpdate = linkEnter.merge(link);
+
     // Transition links to their new position.
-    link
+    linkUpdate
       .transition()
       .duration(animationDuration)
       .attr('d', d => {
@@ -126,7 +129,7 @@ export function renderLines(config = {}) {
         config.callerNode = null;
       });
   } else if (lineType === 'curve') {
-    link
+    var linkEnter = link
       .enter()
       .insert('path', 'g')
       .attr('class', 'link')
@@ -140,14 +143,15 @@ export function renderLines(config = {}) {
           y: parentNode.y0,
         };
 
-        return curve({
-          source,
-          target: source,
-        });
+        console.log({ source });
+
+        return curve([source, source]);
       });
 
+    var linkUpdate = linkEnter.merge(link);
+
     // Transition links to their new position.
-    link
+    linkUpdate
       .transition()
       .duration(animationDuration)
       .attr('d', curve);

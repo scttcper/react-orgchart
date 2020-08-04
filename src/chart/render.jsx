@@ -61,7 +61,6 @@ export function render(config) {
 
   // Collapse all of the children on initial load
   nodes.forEach(collapse);
-  console.log(nodes);
 
   config.links = links;
   config.nodes = nodes;
@@ -82,7 +81,6 @@ export function render(config) {
     .insert('g')
     .attr('class', CHART_NODE_CLASS)
     .attr('transform', d => {
-      console.log(d);
       return `translate(${d.x}, ${d.y})`;
     })
     .on('click', onClick(config));
@@ -207,7 +205,9 @@ export function render(config) {
     .remove();
 
   // Update the links
-  svg.selectAll('path.link').data(links, d => d.target.id);
+  svg.selectAll('path.link').data(links, function (d) {
+    return d.id;
+  });
 
   [
     { cls: ENTITY_NAME_CLASS, max: maxNameWordLength },
