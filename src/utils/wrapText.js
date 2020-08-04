@@ -13,7 +13,7 @@ export function wrapText(
   maxNumberOfLines = 3,
   maxWordLength = 17,
 ) {
-  if (!text?._groups?.[0]?.length) {
+  if (!text._groups || !text._groups[0] || !text._groups[0].length) {
     return '';
   }
 

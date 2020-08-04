@@ -71,7 +71,7 @@ export function render(config) {
     .append('g')
     .attr('class', CHART_NODE_CLASS)
     .attr('transform', () => {
-      return `translate(${parentNode.x0 ?? parentNode.x}, ${parentNode.y0 ?? parentNode.y})`;
+      return `translate(${parentNode.x0 || parentNode.x}, ${parentNode.y0 || parentNode.y})`;
     })
     .on('click', onClick(config));
 

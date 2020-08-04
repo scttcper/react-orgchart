@@ -1,11 +1,11 @@
-export const getName = data => data.data.entity?.name;
+export const getName = data => data.data.entity && data.data.entity.name;
 
-export const getTitle = data => data.data.entity?.title;
+export const getTitle = data => data.data.entity && data.data.entity.title;
 
-export const getSubTitle = data => data.data.entity?.subTitle;
+export const getSubTitle = data => data.data.entity && data.data.entity.subTitle;
 
 export const getCount = data => {
-  let children = data.data.children?.length ?? data.data._children?.length;
+  let children = (data.data.children || []).length || (data.data._children || []).length;
   if (!children) {
     return '';
   }

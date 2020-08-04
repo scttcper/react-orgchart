@@ -8,8 +8,8 @@ export function onClick(config) {
     }
 
     // eslint-disable-next-line no-restricted-globals
-    const link = event?.target?.closest('a');
-    if (link?.href) {
+    const link = event && event.target && event.target.closest('a');
+    if (link && link.href) {
       return;
     }
 
