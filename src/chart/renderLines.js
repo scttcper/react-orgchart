@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-export function renderLines(config = {}) {
+export function renderLines(config = {}, source) {
   const {
     svg,
     links,
@@ -45,18 +45,19 @@ export function renderLines(config = {}) {
       .attr('stroke-opacity', 1)
       .attr('stroke-width', 1.25)
       .attr('d', d => {
+        console.log('xxx', d.source.x, d.source.x0);
         const linePoints = [
           {
-            x: d.source.x + parseInt(nodeWidth / 2, 10),
-            y: d.source.y + nodeHeight + 2,
+            x: d.source.x0 + parseInt(nodeWidth / 2, 10),
+            y: d.source.y0 + nodeHeight + 2,
           },
           {
-            x: d.source.x + parseInt(nodeWidth / 2, 10),
-            y: d.source.y + nodeHeight + 2,
+            x: d.source.x0 + parseInt(nodeWidth / 2, 10),
+            y: d.source.y0 + nodeHeight + 2,
           },
           {
-            x: d.source.x + parseInt(nodeWidth / 2, 10),
-            y: d.source.y + nodeHeight + 2,
+            x: d.source.x0 + parseInt(nodeWidth / 2, 10),
+            y: d.source.y0 + nodeHeight + 2,
           },
           {
             x: d.source.x + parseInt(nodeWidth / 2, 10),
@@ -98,6 +99,8 @@ export function renderLines(config = {}) {
       });
 
     // Animate the existing links to the parent's new position
+    console.log('exit', link
+      .exit());
     link
       .exit()
       .transition()
@@ -124,9 +127,6 @@ export function renderLines(config = {}) {
         ];
 
         return angle(linePoints);
-      })
-      .each('end', () => {
-        config.callerNode = null;
       });
   } else if (lineType === 'curve') {
     var linkEnter = link

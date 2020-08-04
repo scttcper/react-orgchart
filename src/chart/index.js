@@ -84,8 +84,8 @@ export function init(options) {
   // Define box shadow and avatar border radius
 
   // Center the viewport on initial load
-  treeData.x0 = 0;
-  treeData.y0 = elemHeight / 2;
+  // treeData.x0 = 0;
+  // treeData.y0 = elemHeight / 2;
 
   // Connect core variables to config so that they can be
   // used in internal rendering functions

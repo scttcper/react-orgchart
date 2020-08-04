@@ -14,10 +14,12 @@ export function onClick(config) {
 
     if (datum.children) {
       // Collapse the children
+      config.callerNode = datum;
       datum._children = datum.children;
       datum.children = null;
     } else {
       // Expand the children
+      config.callerNode = null;
       datum.children = datum._children;
       datum._children = null;
     }

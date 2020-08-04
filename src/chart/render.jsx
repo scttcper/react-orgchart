@@ -60,7 +60,8 @@ export function render(config) {
   let links = data.links();
 
   // Collapse all of the children on initial load
-  nodes.forEach(collapse);
+  // nodes.forEach(collapse);
+  console.log(nodes);
 
   config.links = links;
   config.nodes = nodes;
