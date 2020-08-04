@@ -1,6 +1,4 @@
-module.exports = {
-  collapse: require('./collapse'),
-  wrapText: require('./wrapText'),
-  helpers: require('./helpers'),
-  covertImageToBase64: require('./covertImageToBase64'),
-}
+export * from './collapse';
+export * from './wrapText';
+export * from './helpers';
+export * from './covertImageToBase64';

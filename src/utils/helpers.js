@@ -1,42 +1,30 @@
-let _ = require('lodash');
+export const getName = data => data.entity?.name;
 
-let getName = data => _.get(data, 'entity.name');
+export const getTitle = data => data.entity?.title;
 
-let getTitle = data => _.get(data, 'entity.title');
+export const getSubTitle = data => data.entity?.subTitle;
 
-let getSubTitle = data => _.get(data, 'entity.subTitle');
-
-let getCount = data => {
+export const getCount = data => {
   let reports = data.children?.length ?? data._children?.length;
   if (!reports) {
     return '';
   }
 
   // return `${count} Reports`;
-  console.log(data);
   return data._children === null ? 'Collapse' : 'Expand';
 };
 
-let getCursorForNode = data =>
+export const getCursorForNode = data =>
   data.children || data._children || data.hasChild ?
     'pointer' :
     'default';
 
-let customOnClick = (fn, onClick, config) => data => {
-  if (_.isFunction(fn)) {
+export const customOnClick = (fn, onClick, config) => data => {
+  if (typeof fn === 'function') {
     if (fn(data, d3.event)) {
       onClick(config);
     } else {
       d3.event.stopPropagation();
     }
   }
-};
-
-module.exports = {
-  getName,
-  getTitle,
-  getSubTitle,
-  getCount,
-  getCursorForNode,
-  customOnClick,
 };

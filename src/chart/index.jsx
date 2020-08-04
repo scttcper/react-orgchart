@@ -1,15 +1,9 @@
 const d3 = require('d3');
-const { collapse, wrapText, helpers } = require('../utils');
-const defineBoxShadow = require('../defs/defineBoxShadow');
-const defineAvatarClip = require('../defs/defineAvatarClip');
+import { collapse } from '../utils';
 const render = require('./render');
 const defaultConfig = require('./config');
 
-module.exports = {
-  init,
-};
-
-function init(options) {
+export function init(options) {
   // Merge options with the default config
   const config = {
     ...defaultConfig,
@@ -63,9 +57,7 @@ function init(options) {
   const elemHeight = elem.offsetHeight;
 
   // Setup the d3 tree layout
-  config.tree = d3.layout
-    .tree()
-    .nodeSize([nodeWidth + nodeSpacing, nodeHeight + nodeSpacing]);
+  config.tree = d3.layout.tree().nodeSize([nodeWidth + nodeSpacing, nodeHeight + nodeSpacing]);
 
   // Calculate width of a node with expanded children
   // const childrenWidth = parseInt((treeData.children.length * nodeWidth) / 2)
@@ -90,22 +82,9 @@ function init(options) {
   const centerPoint = elemWidth / 2 - nodeWidth / 2 - margin.left / 2;
 
   // Add our base svg group to transform when a user zooms/pans
-  const svg = svgroot
-    .append('g')
-    .attr(
-      'transform',
-      'translate(' +
-        centerPoint +
-        ',' +
-        48 +
-        ')',
-    );
+  const svg = svgroot.append('g').attr('transform', 'translate(' + centerPoint + ',' + 48 + ')');
 
   // Define box shadow and avatar border radius
-  defineBoxShadow(svgroot, 'boxShadow');
-  defineAvatarClip(svgroot, 'avatarClip', {
-    borderRadius: 40,
-  });
 
   // Center the viewport on initial load
   treeData.x0 = 0;
@@ -123,11 +102,7 @@ function init(options) {
   config.render = render;
 
   // Defined zoom behavior
-  var zoom = d3.behavior
-    .zoom()
-    .scaleExtent([0.1, 1.5])
-    .duration(50)
-    .on('zoom', zoomed);
+  var zoom = d3.behavior.zoom().scaleExtent([0.1, 1.5]).duration(50).on('zoom', zoomed);
 
   let zoomedRoot = svgroot.call(zoom);
 
@@ -150,10 +125,7 @@ function init(options) {
 
   // Zoom update
   function zoomed() {
-    svg.attr(
-      'transform',
-      'translate(' + zoom.translate() + ')' + 'scale(' + zoom.scale() + ')',
-    );
+    svg.attr('transform', 'translate(' + zoom.translate() + ')' + 'scale(' + zoom.scale() + ')');
   }
 
   // To update translate and scale of zoom
@@ -176,15 +148,7 @@ function init(options) {
   // Zoom extent to fit svg on the screen
   function scaleToFit() {
     const latestConfig = loadConfig();
-    const {
-      nodeLeftX,
-      nodeRightX,
-      nodeWidth,
-      nodeY,
-      margin,
-      elemHeight,
-      elemWidth,
-    } = latestConfig;
+    const { nodeLeftX, nodeRightX, nodeWidth, nodeY, margin, elemHeight, elemWidth } = latestConfig;
 
     const centerPoint = elemWidth / 2 - nodeWidth / 2 - margin.left / 2;
     const svgWidth = nodeLeftX + nodeRightX;
@@ -193,8 +157,7 @@ function init(options) {
     let scaleX = elemWidth / svgWidth - 0.03;
     let scaleY = elemHeight / svgHeight - 0.06;
     const chooseScale = scaleX < scaleY ? scaleX : scaleY;
-    let scale =
-        svgWidth > elemWidth || svgHeight > elemHeight ? chooseScale : 1;
+    let scale = svgWidth > elemWidth || svgHeight > elemHeight ? chooseScale : 1;
     let translateX = nodeLeftX * scale + nodeWidth / 2;
 
     if (svgWidth > elemWidth || svgHeight > elemHeight) {

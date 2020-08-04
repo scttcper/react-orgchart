@@ -8,7 +8,10 @@ import { data } from './testdata';
 // @ts-expect-error
 import avatarPersonnel from './assets/avatar-personnel.svg';
 
-const tree = arrayToTree(data.map(x => ({ ...x, entity: x, parentId: x.reportsTo?.id })), { dataField: null });
+const tree = arrayToTree(
+  data.map(x => ({ ...x, entity: { ...x, avatar: avatarPersonnel }, parentId: x.reportsTo?.id })),
+  { dataField: null },
+);
 
 export default class App extends React.Component {
   constructor(props) {
@@ -60,9 +63,6 @@ export default class App extends React.Component {
           loadConfig={() => this.state.config}
           downloadedOrgChart={d => {
             this.handleDownload();
-          }}
-          loadImage={d => {
-            return Promise.resolve(avatarPersonnel);
           }}
           loadParent={d => {
             const parentData = this.getParent(d);

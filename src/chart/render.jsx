@@ -1,9 +1,9 @@
-let _ = require('lodash');
 let d3 = require('d3');
-let { wrapText, helpers, covertImageToBase64 } = require('../utils');
+import { wrapText, covertImageToBase64, getCursorForNode } from '../utils';
+import * as helpers from '../utils';
 let renderLines = require('./renderLines');
 let onClick = require('./onClick');
-let iconLink = require('./components/iconLink');
+import { iconLink } from './components/iconLink';
 let supervisorIcon = require('./components/supervisorIcon');
 
 const CHART_NODE_CLASS = 'org-chart-node';
@@ -122,7 +122,7 @@ function render(config) {
     .attr('stroke', borderColor)
     .attr('rx', nodeBorderRadius)
     .attr('ry', nodeBorderRadius)
-    .style('cursor', helpers.getCursorForNode);
+    .style('cursor', getCursorForNode);
 
   let namePos = {
     x: nodeWidth / 2,
@@ -144,7 +144,7 @@ function render(config) {
     .style('cursor', 'pointer')
     .style('fill', nameColor)
     .style('font-size', nameFontSize)
-    .text(d => _.isFunction(getName) ? getName(d) : helpers.getName(d))
+    .text(d => (typeof getName === 'function' ? getName(d) : helpers.getName(d)))
     .on('click', helpers.customOnClick(onNameClick, onClick, config));
 
   // Title
@@ -157,7 +157,7 @@ function render(config) {
     .style('font-size', titleFontSize)
     .style('cursor', 'pointer')
     .style('fill', titleColor)
-    .text(d => _.isFunction(getTitle) ? getTitle(d) : helpers.getTitle(d))
+    .text(d => (typeof getTitle === 'function' ? getTitle(d) : helpers.getTitle(d)))
     .on('click', helpers.customOnClick(onTitleClick, onClick, config));
 
   // SubTitle
@@ -170,7 +170,7 @@ function render(config) {
     .style('font-size', subTitleFontSize)
     .style('cursor', 'pointer')
     .style('fill', titleColor)
-    .text(d => _.isFunction(getSubTitle) ? getSubTitle(d) : helpers.getSubTitle(d))
+    .text(d => (typeof getSubTitle === 'function' ? getSubTitle(d) : helpers.getSubTitle(d)))
     .on('click', helpers.customOnClick(onSubTitleClick, onClick, config));
 
   // Count
@@ -184,7 +184,7 @@ function render(config) {
     .style('font-weight', 400)
     .style('cursor', 'pointer')
     .style('fill', reportsColor)
-    .text(d => _.isFunction(getCount) ? getCount(d) : helpers.getCount(d))
+    .text(d => (typeof getCount === 'function' ? getCount(d) : helpers.getCount(d)))
     .on('click', helpers.customOnClick(onCountClick, onClick, config));
 
   // Entity's Avatar
@@ -196,18 +196,6 @@ function render(config) {
     .attr('x', avatarPos.x)
     .attr('y', avatarPos.y)
     .attr('stroke', borderColor)
-    .attr('s', d => {
-      d.entity.hasImage ?
-        d.entity.avatar :
-        loadImage(d).then(res => {
-          covertImageToBase64(res, function (dataUrl) {
-            d3.select(`#image-${d.id}`).attr('href', dataUrl);
-            d.entity.avatar = dataUrl;
-          });
-          d.entity.hasImage = true;
-          return d.entity.avatar;
-        });
-    })
     .attr('src', d => d.entity.avatar)
     .attr('href', d => d.entity.avatar)
     .attr('clip-path', 'url(#avatarClip)');
@@ -232,10 +220,7 @@ function render(config) {
     .duration(animationDuration)
     .attr('transform', d => `translate(${d.x},${d.y})`);
 
-  nodeUpdate
-    .select('rect.box')
-    .attr('fill', backgroundColor)
-    .attr('stroke', borderColor);
+  nodeUpdate.select('rect.box').attr('fill', backgroundColor).attr('stroke', borderColor);
 
   // Transition exiting nodes to the parent's new position.
   let nodeExit = node
@@ -248,35 +233,44 @@ function render(config) {
   // Update the links
   let link = svg.selectAll('path.link').data(links, d => d.target.id);
 
-  _.each(
-    [
-      { cls: ENTITY_NAME_CLASS, max: maxNameWordLength },
-      { cls: ENTITY_TITLE_CLASS, max: maxTitleWordLength },
-      { cls: ENTITY_SUB_TITLE_CLASS, max: maxSubTitleWordLength },
-      { cls: COUNTS_CLASS, max: maxCountWordLength },
-    ],
-    ({ cls, max }) => {
-      svg.selectAll(`text.unedited.${cls}`).call(
-        wrapText,
-        nodeWidth - 12, // Adjust with some padding
-        cls === ENTITY_NAME_CLASS ?
-          3 : // name should wrap at 3 lines max
-          1, // all others have 1 line to work with
-        max,
-      );
-    });
+  [
+    { cls: ENTITY_NAME_CLASS, max: maxNameWordLength },
+    { cls: ENTITY_TITLE_CLASS, max: maxTitleWordLength },
+    { cls: ENTITY_SUB_TITLE_CLASS, max: maxSubTitleWordLength },
+    { cls: COUNTS_CLASS, max: maxCountWordLength },
+  ].forEach(({ cls, max }) => {
+    svg.selectAll(`text.unedited.${cls}`).call(
+      wrapText,
+      nodeWidth - 12, // Adjust with some padding
+      // name should wrap at 3 lines max
+      cls === ENTITY_NAME_CLASS ? 3 : 2,
+      max,
+    );
+  });
 
   // Add Tooltips
-  svg.selectAll(`text.${ENTITY_NAME_CLASS}`).append('svg:title').text(d => getName ? getName(d) : helpers.getName(d));
-  svg.selectAll(`text.${ENTITY_TITLE_CLASS}`).append('svg:title').text(d => getTitle ? getTitle(d) : helpers.getTitle(d));
-  svg.selectAll(`text.${ENTITY_SUB_TITLE_CLASS}`).append('svg:title').text(d => getSubTitle ? getSubTitle(d) : helpers.getSubTitle(d));
-  svg.selectAll(`text.${COUNTS_CLASS}`).append('svg:title').text(d => getCount ? getCount(d) : helpers.getCount(d));
+  svg
+    .selectAll(`text.${ENTITY_NAME_CLASS}`)
+    .append('svg:title')
+    .text(d => (getName ? getName(d) : helpers.getName(d)));
+  svg
+    .selectAll(`text.${ENTITY_TITLE_CLASS}`)
+    .append('svg:title')
+    .text(d => (getTitle ? getTitle(d) : helpers.getTitle(d)));
+  svg
+    .selectAll(`text.${ENTITY_SUB_TITLE_CLASS}`)
+    .append('svg:title')
+    .text(d => (getSubTitle ? getSubTitle(d) : helpers.getSubTitle(d)));
+  svg
+    .selectAll(`text.${COUNTS_CLASS}`)
+    .append('svg:title')
+    .text(d => (getCount ? getCount(d) : helpers.getCount(d)));
 
   // Render lines connecting nodes
   renderLines(config);
 
   // Stash the old positions for transition.
-  nodes.forEach(function (d) {
+  nodes.forEach(d => {
     d.x0 = d.x;
     d.y0 = d.y;
   });
@@ -284,7 +278,7 @@ function render(config) {
   var nodeLeftX = -70;
   var nodeRightX = 70;
   var nodeY = 200;
-  nodes.map(d => {
+  nodes.forEach(d => {
     nodeLeftX = d.x < nodeLeftX ? d.x : nodeLeftX;
     nodeRightX = d.x > nodeRightX ? d.x : nodeRightX;
     nodeY = d.y > nodeY ? d.y : nodeY;

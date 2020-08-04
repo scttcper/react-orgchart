@@ -1,5 +1,5 @@
 const d3 = require('d3');
-const { collapse } = require('../utils');
+import { collapse } from '../utils';
 
 module.exports = onClick;
 
