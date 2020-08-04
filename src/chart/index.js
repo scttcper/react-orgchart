@@ -1,9 +1,9 @@
-import { select } from 'd3-selection';
-import { zoom as zoomer, zoomIdentity } from 'd3-zoom';
-import { tree, hierarchy } from 'd3-hierarchy';
-import { event } from 'd3-selection';
-import { collapse } from '../utils';
-import { render } from './render';
+import {select} from 'd3-selection';
+import {zoom as zoomer, zoomIdentity} from 'd3-zoom';
+import {tree, hierarchy} from 'd3-hierarchy';
+import {event} from 'd3-selection';
+import {collapse} from '../utils';
+import {render} from './render';
 import defaultConfig from './config';
 
 export function init(options) {
@@ -72,7 +72,7 @@ export function init(options) {
 
   // Graph center point
   const centerPoint = elemWidth / 2 - nodeWidth / 2 + 15;
-  console.log({ centerPoint });
+  console.log({centerPoint});
 
   // Add our base svg group to transform when a user zooms/pans
   const svg = svgroot.append('g');

@@ -1,11 +1,11 @@
 {
   "root": true,
   "env": {
-    "browser": true,
-    "jest": true,
+    "browser": true
   },
-  "extends": ["@ctrl/eslint-config", "xo-react/space"],
+  "extends": ["xo-space", "xo-react/space"],
   "rules": {
+    "comma-dangle": ["error", "always-multiline"],
     "no-mixed-operators": 0
   }
 }

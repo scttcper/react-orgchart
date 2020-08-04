@@ -1,7 +1,7 @@
 import React from 'react';
 import { arrayToTree } from 'performant-array-to-tree';
 
-import { OrgChart } from '../src/react/org-chart';
+import { OrgChart } from '../src';
 // import { tree } from './Tree';
 import { data } from './testdata';
 

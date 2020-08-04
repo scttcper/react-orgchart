@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { init } from '../chart';
+import { init } from './chart';
 
 export class OrgChart extends React.PureComponent {
   anchor = React.createRef();

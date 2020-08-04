@@ -20,10 +20,10 @@ export const getCursorForNode = data =>
 
 export const customOnClick = (fn, onClick, config) => data => {
   if (typeof fn === 'function') {
-    if (fn(data, d3.event)) {
+    if (fn(data, event)) {
       onClick(config);
     } else {
-      d3.event.stopPropagation();
+      event.stopPropagation();
     }
   }
 };

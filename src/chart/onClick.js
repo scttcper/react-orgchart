@@ -1,5 +1,5 @@
 export function onClick(config) {
-  const { render } = config;
+  const {render} = config;
 
   return datum => {
     if (event.defaultPrevented) {

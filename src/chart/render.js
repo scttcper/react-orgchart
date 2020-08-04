@@ -1,8 +1,8 @@
-import { wrapText, getCursorForNode } from '../utils';
+import {wrapText, getCursorForNode} from '../utils';
 import * as helpers from '../utils';
-import { renderLines } from './renderLines';
-import { onClick } from './onClick';
-import { iconLink } from './components/iconLink';
+import {renderLines} from './renderLines';
+import {onClick} from './onClick';
+import {iconLink} from './components/iconLink';
 
 const CHART_NODE_CLASS = 'org-chart-node';
 const ENTITY_LINK_CLASS = 'org-chart-entity-link';
@@ -203,11 +203,11 @@ export function render(config) {
   });
 
   [
-    { cls: ENTITY_NAME_CLASS, max: maxNameWordLength },
-    { cls: ENTITY_TITLE_CLASS, max: maxTitleWordLength },
-    { cls: COUNTS_CLASS, max: maxCountWordLength },
-  ].forEach(({ cls, max }) => {
-    // svg.selectAll(`text.unedited.${cls}`).call(wrapText);
+    {cls: ENTITY_NAME_CLASS, max: maxNameWordLength},
+    {cls: ENTITY_TITLE_CLASS, max: maxTitleWordLength},
+    {cls: COUNTS_CLASS, max: maxCountWordLength},
+  ].forEach(({cls, max}) => {
+    // Svg.selectAll(`text.unedited.${cls}`).call(wrapText);
     svg.selectAll(`text.unedited.${cls}`).call(
       wrapText,
       nodeWidth - 12, // Adjust with some padding
