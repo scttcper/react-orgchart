@@ -151,14 +151,14 @@ export function render(config) {
     .on('click', helpers.customOnClick(onCountClick, onClick, config));
 
   // Add avatar clip path
-  const defs = svg.append('svg:defs')
+  const defs = svg.append('svg:defs');
   defs
     .append('clipPath')
     .attr('id', 'avatarClip')
     .append('circle')
     .attr('cx', 70)
     .attr('cy', 32)
-    .attr('r', 24)
+    .attr('r', 24);
 
   // Entity's Avatar
   nodeEnter
