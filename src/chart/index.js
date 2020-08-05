@@ -90,7 +90,7 @@ export function init(options) {
     });
   });
 
-  svg.call(zoom.transform, zoomIdentity.translate(centerPoint, 48).scale(0.8));
+  svgroot.call(zoom.transform, zoomIdentity.translate(centerPoint, 48).scale(0.8));
 
   const zoomedRoot = svgroot.call(zoom);
 
