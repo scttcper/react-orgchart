@@ -2,14 +2,13 @@ import { select } from 'd3-selection';
 import { zoom as zoomer, zoomIdentity } from 'd3-zoom';
 import { tree, hierarchy } from 'd3-hierarchy';
 import { event } from 'd3-selection';
-import { collapse } from '../utils';
+
+import { collapse } from '../utils/index';
 import { render } from './render';
-import defaultConfig from './config';
 
 export function init(options) {
   // Merge options with the default config
   const config = {
-    ...defaultConfig,
     ...options,
     treeData: options.data,
   };
@@ -111,7 +110,7 @@ export function init(options) {
   // Add listener for when the browser or parent node resizes
   const resize = () => {
     if (!elem) {
-      global.removeEventListener('resize', resize);
+      window.removeEventListener('resize', resize);
       return;
     }
 
@@ -119,7 +118,7 @@ export function init(options) {
   };
 
   if (shouldResize) {
-    global.addEventListener('resize', resize);
+    window.addEventListener('resize', resize);
   }
 
   // Start initial render

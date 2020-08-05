@@ -1,5 +1,5 @@
-import { wrapText, getCursorForNode } from '../utils';
-import * as helpers from '../utils';
+import { wrapText, getCursorForNode } from '../utils/index';
+import * as helpers from '../utils/index';
 import { renderLines } from './renderLines';
 import { onClick } from './onClick';
 import { iconLink } from './components/iconLink';

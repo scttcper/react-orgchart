@@ -2,7 +2,6 @@ import React from 'react';
 import { arrayToTree } from 'performant-array-to-tree';
 
 import { OrgChart } from '../src';
-// import { tree } from './Tree';
 import { data } from './testdata';
 
 // @ts-expect-error
@@ -17,9 +16,7 @@ export default class App extends React.Component {
   render() {
     // For downloading org chart as image or pdf based on id
     return (
-      <OrgChart
-        tree={tree[0]}
-      />
+      <OrgChart tree={tree[0]}/>
     );
   }
 }
