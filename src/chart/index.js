@@ -123,4 +123,12 @@ export function init(options) {
 
   // Start initial render
   render(config);
+
+  // return OnDestroy fn
+  return () => {
+    svgroot.remove();
+    if (shouldResize) {
+      window.removeEventListener('resize', resize);
+    }
+  };
 }

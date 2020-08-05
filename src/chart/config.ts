@@ -1,5 +1,3 @@
-import { onClick } from './onClick';
-
 const animationDuration = 350;
 const shouldResize = true;
 

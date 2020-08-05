@@ -28,6 +28,7 @@ type Props = Partial<Config> & {
 
 export class OrgChart extends React.PureComponent<Props> {
   anchor = React.createRef();
+  onDestroy!: () => void;
 
   componentDidMount() {
     const {
@@ -38,7 +39,7 @@ export class OrgChart extends React.PureComponent<Props> {
       ...options
     } = this.props;
 
-    init({
+    this.onDestroy = init({
       ...defaultConfig,
       id: `#${id}`,
       elem: this.anchor.current,
@@ -47,6 +48,10 @@ export class OrgChart extends React.PureComponent<Props> {
       disableCanvasMouseWheelZoom,
       ...options,
     });
+  }
+
+  componentWillUnmount() {
+    this.onDestroy();
   }
 
   render() {
