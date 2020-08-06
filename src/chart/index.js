@@ -107,6 +107,41 @@ export function init(options) {
       .on('touchend.zoom', null);
   }
 
+  // Add avatar clip path
+  const defs = svgroot.append('svg:defs');
+  defs
+    .append('clipPath')
+    .attr('id', 'avatarClip')
+    .append('circle')
+    .attr('cx', 70)
+    .attr('cy', 32)
+    .attr('r', 24);
+
+  // Add boxshadow
+  const filter = svgroot
+    .append('svg:defs')
+    .append('svg:filter')
+    .attr('id', 'boxShadow')
+    .attr('height', '150%')
+    .attr('width', '150%');
+
+  filter
+    .append('svg:feGaussianBlur')
+    .attr('in', 'SourceAlpha')
+    .attr('stdDeviation', 1) // blur amount
+    .attr('result', 'blurOut');
+
+  filter
+    .append('svg:feOffset')
+    .attr('in', 'blurOut')
+    .attr('dx', 0)
+    .attr('dy', 2)
+    .attr('result', 'offsetOut');
+
+  const feMerge = filter.append('feMerge');
+  feMerge.append('feMergeNode').attr('in', 'offsetOut');
+  feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
   // Add listener for when the browser or parent node resizes
   const resize = () => {
     if (!elem) {

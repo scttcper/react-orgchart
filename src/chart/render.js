@@ -91,7 +91,6 @@ export function render(config) {
   // Entity Card Container
   nodeEnter
     .append('rect')
-    .attr('class', d => (d.isHighlight ? `${ENTITY_HIGHLIGHT} box` : 'box'))
     .attr('width', nodeWidth)
     .attr('height', nodeHeight)
     .attr('id', d => d.data.id)
@@ -149,16 +148,6 @@ export function render(config) {
     .style('fill', reportsColor)
     .text(d => (typeof getCount === 'function' ? getCount(d) : helpers.getCount(d)))
     .on('click', helpers.customOnClick(onCountClick, onClick, config));
-
-  // Add avatar clip path
-  const defs = svg.append('svg:defs');
-  defs
-    .append('clipPath')
-    .attr('id', 'avatarClip')
-    .append('circle')
-    .attr('cx', 70)
-    .attr('cy', 32)
-    .attr('r', 24);
 
   // Entity's Avatar
   nodeEnter
