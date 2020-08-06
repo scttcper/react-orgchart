@@ -8,7 +8,6 @@ const CHART_NODE_CLASS = 'org-chart-node';
 const ENTITY_LINK_CLASS = 'org-chart-entity-link';
 const ENTITY_NAME_CLASS = 'org-chart-entity-name';
 const ENTITY_TITLE_CLASS = 'org-chart-entity-title';
-const ENTITY_HIGHLIGHT = 'org-chart-entity-highlight';
 const COUNTS_CLASS = 'org-chart-counts';
 
 export function render(config) {
