@@ -42,3 +42,4 @@ build
 _output
 snowpack.lock.json
 .cache
+.parcel-cache

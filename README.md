@@ -2,7 +2,7 @@
 
 Small react wrapper around a [d3](https://d3js.org/) based org chart.
 
-This is based on [smartprocure/react-org-chart](https://github.com/smartprocure/react-org-chart) which itself is also a fork. This fork has been updated to use d3 v5 and expose typescript types.
+This is based on [smartprocure/react-org-chart](https://github.com/smartprocure/react-org-chart) which itself is also a fork. This fork has been updated to use d3 v6 and expose typescript types.
 
 DEMO: https://ctrl-react-orgchart.vercel.app
 

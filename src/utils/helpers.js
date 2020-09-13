@@ -14,13 +14,11 @@ export const getCount = data => {
 export const getCursorForNode = data =>
   data.data.children || data.data._children ? 'pointer' : 'default';
 
-export const customOnClick = (fn, onClick, config) => data => {
+export const customOnClick = (fn, onClick, config) => (event, data) => {
   if (typeof fn === 'function') {
-    // eslint-disable-next-line no-restricted-globals
     if (fn(data, event)) {
       onClick(config);
     } else {
-      // eslint-disable-next-line no-restricted-globals
       event.stopPropagation();
     }
   }

@@ -83,9 +83,9 @@ export function init(options) {
   config.render = render;
 
   // Defined zoom behavior
-  const zoom = zoomer().scaleExtent([0.1, 1.5]).duration(50).on('zoom', () => {
+  const zoom = zoomer().scaleExtent([0.1, 1.5]).duration(50).on('zoom', zoomEvent => {
     svg.attr('transform', () => {
-      return event.transform;
+      return zoomEvent.transform;
     });
   });
 
