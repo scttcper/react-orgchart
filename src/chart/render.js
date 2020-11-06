@@ -1,4 +1,3 @@
-import { wrapText, getCursorForNode } from '../utils/index';
 import * as helpers from '../utils/index';
 import { renderLines } from './renderLines';
 import { onClick } from './onClick';
@@ -97,7 +96,7 @@ export function render(config) {
     .attr('stroke', borderColor)
     .attr('rx', nodeBorderRadius)
     .attr('ry', nodeBorderRadius)
-    .style('cursor', getCursorForNode);
+    .style('cursor', helpers.getCursorForNode);
 
   let namePos = {
     x: nodeWidth / 2,
@@ -207,7 +206,7 @@ export function render(config) {
   ].forEach(({ cls, max }) => {
     // Svg.selectAll(`text.unedited.${cls}`).call(wrapText);
     svg.selectAll(`text.unedited.${cls}`).call(
-      wrapText,
+      helpers.wrapText,
       nodeWidth - 12, // Adjust with some padding
       // name should wrap at 3 lines max
       cls === ENTITY_NAME_CLASS ? 3 : 2,
