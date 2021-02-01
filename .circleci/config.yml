@@ -13,7 +13,7 @@ jobs:
           command: npm run lint
       - run:
           name: lint
-          command: npm run build:demo
+          command: npm run demo:build
   release:
     docker:
       - image: circleci/node:14
