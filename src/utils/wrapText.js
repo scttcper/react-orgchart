@@ -7,12 +7,7 @@ let getTruncatedText = (text, maxWordLength) => truncate(text, { length: maxWord
 // Text is broken down to words, each word is added to a line and then the lines width is checked
 // If the line width is less than the max we move to the next word, if more we add new line etc
 // until the max number of lines is reached.
-export function wrapText(
-  text,
-  maxLineWidth,
-  maxNumberOfLines = 3,
-  maxWordLength = 17,
-) {
+export function wrapText(text, maxLineWidth, maxNumberOfLines = 3, maxWordLength = 17) {
   if (!text._groups || !text._groups[0] || !text._groups[0].length) {
     return '';
   }
@@ -25,10 +20,7 @@ export function wrapText(
     const y = text.attr('y');
     const dy = parseFloat(text.attr('dy'));
     const lineHeight = 1.1;
-    const words = text
-      .text()
-      .split(/\s+/)
-      .reverse();
+    const words = text.text().split(/\s+/).reverse();
 
     let lineNumber = 0;
     let curLineWidth;

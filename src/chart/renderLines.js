@@ -17,10 +17,9 @@ export function renderLines(config) {
   const parentNode = sourceNode || treeData;
 
   // Select all the links to render the lines
-  const link = svg.selectAll('path.link')
-    .data(links, ({ source, target }) => {
-      return `${source.data.id}-${target.data.id}`;
-    });
+  const link = svg.selectAll('path.link').data(links, ({ source, target }) => {
+    return `${source.data.id}-${target.data.id}`;
+  });
 
   // Define the angled line function
   const angle = line()
