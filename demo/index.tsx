@@ -4,13 +4,16 @@ import App from './App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App/>
+    <App />
   </React.StrictMode>,
   document.getElementById('root'),
 );
 
+// HMR Code Snippet Example
 // @ts-expect-error
-if (module.hot) {
+if (import.meta.hot) {
   // @ts-expect-error
-  module.hot.accept();
+  import.meta.hot.accept(({ module }) => {
+    // Accept the module, apply it into your application.
+  });
 }

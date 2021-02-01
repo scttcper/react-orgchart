@@ -15,8 +15,6 @@ const tree = arrayToTree(
 export default class App extends React.Component {
   render() {
     // For downloading org chart as image or pdf based on id
-    return (
-      <OrgChart tree={tree[0]}/>
-    );
+    return <OrgChart tree={tree[0]} />;
   }
 }

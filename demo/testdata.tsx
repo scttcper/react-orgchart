@@ -208,7 +208,7 @@ export const data = [
   },
   {
     id: 'ee932721-3282-4376-967c-6a1240452ff7',
-    name: 'Lpnpycr L\'Cefplr',
+    name: "Lpnpycr L'Cefplr",
     title: 'Psxttwgw Hajuigpe',
     link: 'https://github.com/scttcper/react-orgchart',
     reportsTo: {
