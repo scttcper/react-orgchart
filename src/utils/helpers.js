@@ -3,7 +3,7 @@ export const getName = data => data.data.entity && data.data.entity.name;
 export const getTitle = data => data.data.entity && data.data.entity.title;
 
 export const getCount = data => {
-  let children = (data.children || []).length || (data._children || []).length;
+  const children = (data.children || []).length || (data._children || []).length;
   if (!children) {
     return '';
   }

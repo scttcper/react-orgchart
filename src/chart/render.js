@@ -1,7 +1,8 @@
 import * as helpers from '../utils/index';
-import { renderLines } from './renderLines';
-import { onClick } from './onClick';
+
 import { iconLink } from './components/iconLink';
+import { onClick } from './onClick';
+import { renderLines } from './renderLines';
 
 const CHART_NODE_CLASS = 'org-chart-node';
 const ENTITY_LINK_CLASS = 'org-chart-entity-link';
@@ -60,8 +61,8 @@ export function render(config) {
   });
 
   // Update the nodes
-  let node = svg.selectAll('g.' + CHART_NODE_CLASS).data(nodes, n => n.data.id);
-  let parentNode = sourceNode || nodes[0];
+  const node = svg.selectAll('g.' + CHART_NODE_CLASS).data(nodes, n => n.data.id);
+  const parentNode = sourceNode || nodes[0];
 
   // Enter any new nodes at the parent's previous position.
   const nodeEnter = node
@@ -98,12 +99,12 @@ export function render(config) {
     .attr('ry', nodeBorderRadius)
     .style('cursor', helpers.getCursorForNode);
 
-  let namePos = {
+  const namePos = {
     x: nodeWidth / 2,
     y: nodePaddingY * 1.8 + avatarWidth,
   };
 
-  let avatarPos = {
+  const avatarPos = {
     x: nodeWidth / 2 - avatarWidth / 2,
     y: nodePaddingY / 2,
   };
@@ -161,7 +162,7 @@ export function render(config) {
     .attr('clip-path', 'url(#avatarClip)');
 
   // Entity's Link
-  let nodeLink = nodeEnter
+  const nodeLink = nodeEnter
     .append('a')
     .attr('class', ENTITY_LINK_CLASS)
     .attr('display', d => (d.data.entity.link ? '' : 'none'))
@@ -174,7 +175,7 @@ export function render(config) {
     y: 8,
   });
 
-  var nodeUpdate = nodeEnter.merge(node);
+  const nodeUpdate = nodeEnter.merge(node);
 
   // Transition nodes to their new position.
   nodeUpdate
@@ -237,9 +238,9 @@ export function render(config) {
     d.y0 = d.y;
   });
 
-  var nodeLeftX = -70;
-  var nodeRightX = 70;
-  var nodeY = 200;
+  let nodeLeftX = -70;
+  let nodeRightX = 70;
+  let nodeY = 200;
   nodes.forEach(d => {
     nodeLeftX = d.x < nodeLeftX ? d.x : nodeLeftX;
     nodeRightX = d.x > nodeRightX ? d.x : nodeRightX;

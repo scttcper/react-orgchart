@@ -1,4 +1,4 @@
-import { line, curveLinear } from 'd3-shape';
+import { curveLinear, line } from 'd3-shape';
 
 const margin = 10;
 
@@ -28,7 +28,7 @@ export function renderLines(config) {
     .curve(curveLinear);
 
   // Enter any new links at the parent's previous position.
-  var linkEnter = link
+  const linkEnter = link
     .enter()
     .insert('path', 'g')
     .attr('class', 'link')
@@ -59,7 +59,7 @@ export function renderLines(config) {
       return angle(linePoints);
     });
 
-  var linkUpdate = linkEnter.merge(link);
+  const linkUpdate = linkEnter.merge(link);
 
   // Transition links to their new position.
   linkUpdate

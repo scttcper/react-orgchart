@@ -1,8 +1,9 @@
+import { hierarchy, tree } from 'd3-hierarchy';
 import { select } from 'd3-selection';
 import { zoom as zoomer, zoomIdentity } from 'd3-zoom';
-import { tree, hierarchy } from 'd3-hierarchy';
 
 import { collapse } from '../utils/index';
+
 import { render } from './render';
 
 export function init(options) {
