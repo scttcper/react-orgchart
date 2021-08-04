@@ -36,7 +36,7 @@ jspm_packages
 build
 docs
 dist
-yarn.lock
+package-lock.json
 pkg
 build
 _output
