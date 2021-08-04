@@ -13,16 +13,17 @@ jobs:
           pkg-manager: yarn
       - run:
           name: test
-          command: npm run test:ci
+          command: yarn test:ci
       - run:
           name: lint
-          command: npm run lint
+          command: yarn lint
   release:
     docker:
       - image: cimg/node:current
     steps:
       - checkout
-      - node/install-packages
+      - node/install-packages:
+          pkg-manager: yarn
       - run: npx semantic-release
 
 workflows:
