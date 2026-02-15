@@ -4,12 +4,21 @@ body {
   height: 100%;
   width: 100%;
   font-size: 12px;
-  font-family: 'SF UI Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family:
+    'SF UI Text',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol';
   -webkit-font-smoothing: antialiased;
   background-color: aliceblue;
 }
-
 
 #root {
   margin: auto;

@@ -48,12 +48,12 @@ export interface Config {
   maxNameWordLength: number;
   maxTitleWordLength: number;
   maxCountWordLength: number;
-  onEntityLinkClick?: (data: any, event: any) => void;
-  onNameClick?: (data: any, event: any) => void;
-  onCountClick?: (data: any, event: any) => void;
-  getName?: (data: any) => string;
-  getTitle?: (data: any) => string;
-  getCount?: (data: any) => string;
+  onEntityLinkClick?: (data: unknown, event: Event) => boolean | void;
+  onNameClick?: (data: unknown, event: Event) => boolean | void;
+  onCountClick?: (data: unknown, event: Event) => boolean | void;
+  getName?: (data: unknown) => string;
+  getTitle?: (data: unknown) => string;
+  getCount?: (data: unknown) => string;
 }
 
 export const config: Config = {

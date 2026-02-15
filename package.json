@@ -2,69 +2,85 @@
   "name": "@ctrl/react-orgchart",
   "version": "0.0.0-placeholder",
   "description": "Vx orgchart module",
-  "author": "Scott Cooper <scttcper@gmail.com>",
-  "license": "MIT",
-  "repository": "scttcper/react-orgchart",
-  "sideEffects": false,
   "keywords": [
     "org chart"
   ],
-  "scripts": {
-    "lint": "eslint --ext .js,.ts, .",
-    "lint:fix": "eslint --fix --ext .js,.ts, .",
-    "prepare": "npm run build",
-    "build": "pika build",
-    "demo:watch": "snowpack dev",
-    "demo:build": "snowpack build"
+  "license": "MIT",
+  "author": "Scott Cooper <scttcper@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scttcper/react-orgchart.git"
   },
-  "@pika/pack": {
-    "pipeline": [
-      [
-        "@pika/plugin-ts-standard-pkg",
-        {
-          "tsconfig": "tsconfig.build.json"
-        }
-      ],
-      [
-        "@pika/plugin-build-web"
-      ]
-    ]
-  },
-  "dependencies": {
-    "d3-selection": "^3.0.0",
-    "d3-hierarchy": "^3.0.1",
-    "d3-zoom": "^3.0.0",
-    "d3-shape": "^3.0.1",
-    "lodash.truncate": "^4.4.2"
-  },
-  "devDependencies": {
-    "@ctrl/eslint-config": "2.0.11",
-    "@fullhuman/postcss-purgecss": "4.0.3",
-    "@pika/pack": "0.5.0",
-    "@pika/plugin-build-web": "0.9.2",
-    "@pika/plugin-ts-standard-pkg": "0.9.2",
-    "@snowpack/plugin-webpack": "3.0.0",
-    "@types/d3-hierarchy": "3.0.2",
-    "@types/d3-selection": "3.0.0",
-    "@types/d3-shape": "3.0.2",
-    "@types/d3-zoom": "3.0.1",
-    "@types/lodash.truncate": "4.4.6",
-    "@types/node": "16.4.10",
-    "@types/react": "17.0.15",
-    "eslint-config-xo-react": "0.25.0",
-    "eslint-plugin-react": "7.24.0",
-    "eslint-plugin-react-hooks": "4.2.0",
-    "performant-array-to-tree": "1.9.1",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "snowpack": "3.8.3",
-    "snowpack-plugin-hash": "0.16.0",
-    "typescript": "4.3.5"
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
   },
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "lint": "oxfmt --check && oxlint .",
+    "lint:fix": "oxfmt && oxlint . --fix",
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "dev": "vite",
+    "dev:build": "vite build",
+    "dev:preview": "vite preview",
+    "demo:watch": "vite",
+    "demo:build": "vite build",
+    "prepare": "pnpm build"
+  },
+  "dependencies": {
+    "d3-hierarchy": "^3.1.2",
+    "d3-selection": "^3.0.0",
+    "d3-shape": "^3.2.0",
+    "d3-zoom": "^3.0.0"
+  },
+  "devDependencies": {
+    "@ctrl/oxlint-config": "1.4.0",
+    "@faker-js/faker": "10.3.0",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
+    "@types/d3-hierarchy": "3.1.7",
+    "@types/d3-selection": "3.0.11",
+    "@types/d3-shape": "3.1.8",
+    "@types/d3-zoom": "3.0.8",
+    "@types/node": "25.2.3",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "5.1.4",
+    "jsdom": "28.1.0",
+    "oxfmt": "0.32.0",
+    "oxlint": "1.47.0",
+    "performant-array-to-tree": "1.11.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "tsdown": "0.20.3",
+    "typescript": "5.9.3",
+    "vite": "7.3.1",
+    "vitest": "4.0.18"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
   "release": {
     "branch": "master"
-  }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.29.3"
 }

@@ -1,19 +1,22 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
+
 import App from './App';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root'),
-);
+const rootElement = document.getElementById('root');
+
+if (rootElement) {
+  createRoot(rootElement).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+  );
+}
 
 // HMR Code Snippet Example
-// @ts-expect-error
 if (import.meta.hot) {
   // @ts-expect-error
-  import.meta.hot.accept(({ module }) => {
+  import.meta.hot.accept(({ module: _module }) => {
     // Accept the module, apply it into your application.
   });
 }

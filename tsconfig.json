@@ -1,23 +1,15 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
-    "allowJs": true,
-    "moduleResolution": "node",
-    "lib": ["es2015", "dom"],
-    "target": "es2015",
-    "module": "esnext",
-    "esModuleInterop": true,
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
     "strict": true,
-    "newLine": "lf",
-    "noImplicitAny": false,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "jsx": "react",
-    "noEmitOnError": true,
-    "noUnusedLocals": true,
-    "declaration": true,
-    "sourceMap": true,
-    "outDir": "dist",
-    "skipLibCheck": true
-  }
+    "allowJs": false,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "types": ["vite/client"]
+  },
+  "include": ["src", "demo", "tests", "vite.config.ts", "vitest.config.ts", "tsdown.config.ts"]
 }

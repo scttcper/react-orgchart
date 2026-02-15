@@ -1,13 +1,16 @@
-export function onClick(config) {
+import type { ChartConfig, ChartNode } from './types';
+
+export function onClick(config: ChartConfig): (event: Event, datum: ChartNode) => void {
   const { render } = config;
 
-  return (event, datum) => {
+  return (event: Event, datum: ChartNode): void => {
     if (event.defaultPrevented) {
       return;
     }
 
-    const link = event && event.target && event.target.closest('a');
-    if (link && link.href) {
+    const target = event.target;
+    const link = target instanceof Element ? target.closest('a') : null;
+    if (link instanceof HTMLAnchorElement && link.href) {
       return;
     }
 
@@ -19,12 +22,12 @@ export function onClick(config) {
       // Collapse the children
       config.callerNode = datum;
       datum._children = datum.children;
-      datum.children = null;
+      datum.children = undefined;
     } else {
       // Expand the children
-      config.callerNode = null;
+      config.callerNode = undefined;
       datum.children = datum._children;
-      datum._children = null;
+      datum._children = undefined;
     }
 
     // Pass in the clicked datum as the sourceNode which

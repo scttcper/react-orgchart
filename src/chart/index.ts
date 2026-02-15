@@ -1,54 +1,57 @@
 import { hierarchy, tree } from 'd3-hierarchy';
 import { select } from 'd3-selection';
-import { zoom as zoomer, zoomIdentity } from 'd3-zoom';
+import { zoom as zoomer, zoomIdentity, type D3ZoomEvent } from 'd3-zoom';
 
+import type { TreeItem } from '../types';
 import { collapse } from '../utils/index';
 
+import { config as defaultChartConfig, type Config } from './config';
 import { render } from './render';
+import type { ChartConfig, ChartNode } from './types';
 
-export function init(options) {
-  // Merge options with the default config
-  const config = {
-    ...options,
-    treeData: options.data,
-  };
+export type OrgChartInitOptions = Partial<Config> & {
+  id: string;
+  elem: HTMLElement | null;
+  data: TreeItem | TreeItem[];
+  disableCanvasMouseWheelZoom?: boolean;
+  disableCanvasMouseMove?: boolean;
+};
 
-  if (!config.id) {
+export function initializeOrgChart(options: OrgChartInitOptions): () => void {
+  if (!options.id) {
     throw new Error('missing id for svg root');
   }
 
-  const {
-    elem,
-    treeData,
-    nodeWidth,
-    nodeHeight,
-    nodeSpacing,
-    shouldResize,
-    disableCanvasMouseWheelZoom,
-    disableCanvasMouseMove,
-  } = config;
+  const mergedConfig = {
+    ...defaultChartConfig,
+    ...options,
+  };
+
+  const { elem, nodeWidth, nodeHeight, nodeSpacing, shouldResize } = mergedConfig;
+  const treeData = mergedConfig.data as TreeItem;
 
   // Calculate how many pixel nodes to be spaced based on the
   // type of line that needs to be rendered
-
-  config.lineDepthY = nodeHeight + 40;
+  const lineDepthY = nodeHeight + 40;
 
   if (!elem) {
     throw new Error('No root elem');
   }
 
-  // Reset in case there's any existing DOM
+  // Reset in case there's pre-existing DOM
   elem.innerHTML = '';
   const elemWidth = elem.offsetWidth;
   const elemHeight = elem.offsetHeight;
 
   // Setup the d3 tree layout
-  config.tree = hierarchy(treeData, function (d) {
-    return d.children;
-  });
-  config.treeMap = tree(config.tree).nodeSize([nodeWidth + nodeSpacing, nodeHeight + nodeSpacing]);
+  const treeRoot = hierarchy(treeData, d => d.children ?? undefined);
+  const treeMap = tree<TreeItem>().nodeSize([nodeWidth + nodeSpacing, nodeHeight + nodeSpacing]);
+
   // Collapse tree on load
-  config.treeMap(config.tree).descendants().slice(1).forEach(collapse);
+  treeMap(treeRoot)
+    .descendants()
+    .slice(1)
+    .forEach(node => collapse(node as ChartNode));
 
   // Calculate width of a node with expanded children
   // const childrenWidth = parseInt((treeData.children.length * nodeWidth) / 2)
@@ -74,22 +77,28 @@ export function init(options) {
   // Add our base svg group to transform when a user zooms/pans
   const svg = svgroot.append('g');
 
-  // Connect core variables to config so that they can be
-  // used in internal rendering functions
-  config.svg = svg;
-  config.svgroot = svgroot;
-  config.elemWidth = elemWidth;
-  config.elemHeight = elemHeight;
-  config.render = render;
+  const config: ChartConfig = {
+    ...mergedConfig,
+    data: treeData,
+    lineDepthY,
+    treeData,
+    tree: treeRoot,
+    treeMap,
+    svg,
+    svgroot,
+    render,
+    links: [],
+    nodes: [],
+    elemWidth,
+    elemHeight,
+  };
 
   // Defined zoom behavior
-  const zoom = zoomer()
+  const zoom = zoomer<SVGSVGElement, unknown>()
     .scaleExtent([0.1, 1.5])
     .duration(50)
-    .on('zoom', zoomEvent => {
-      svg.attr('transform', () => {
-        return zoomEvent.transform;
-      });
+    .on('zoom', (zoomEvent: D3ZoomEvent<SVGSVGElement, unknown>) => {
+      svg.attr('transform', zoomEvent.transform.toString());
     });
 
   svgroot.call(zoom.transform, zoomIdentity.translate(centerPoint, 48).scale(0.8));
@@ -97,12 +106,12 @@ export function init(options) {
   const zoomedRoot = svgroot.call(zoom);
 
   // Disable the Mouse Wheel Zooming
-  if (disableCanvasMouseWheelZoom) {
+  if (config.disableCanvasMouseWheelZoom) {
     zoomedRoot.on('wheel.zoom', null);
   }
 
   // Disable the Mouse Wheel Canvas Content Moving
-  if (disableCanvasMouseMove) {
+  if (config.disableCanvasMouseMove) {
     zoomedRoot
       .on('mousedown.zoom', null)
       .on('touchstart.zoom', null)
