@@ -6,7 +6,9 @@ export default defineConfig({
   dts: true,
   sourcemap: true,
   clean: true,
+  minify: false,
+  unbundle: true,
   platform: 'browser',
-  target: 'es2019',
+  target: 'es2025',
   external: ['react', 'react-dom'],
 });
