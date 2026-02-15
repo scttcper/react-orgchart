@@ -1,4 +1,18 @@
-export const iconLink = ({ svg, x = 5, y = 5 }) => {
+import type { Selection } from 'd3-selection';
+
+import type { ChartNode } from '../types';
+
+type EntityLinkSelection = Selection<HTMLAnchorElement, ChartNode, SVGGElement, unknown>;
+
+export const iconLink = ({
+  svg,
+  x = 5,
+  y = 5,
+}: {
+  svg: EntityLinkSelection;
+  x?: number;
+  y?: number;
+}): void => {
   const container = svg
     .append('g')
     .attr('stroke', 'none')

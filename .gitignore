@@ -30,6 +30,7 @@ jspm_packages
 .node_repl_history
 .vscode/*
 !.vscode/launch.json
+!.vscode/settings.json
 .idea
 
 # build
@@ -43,3 +44,4 @@ _output
 snowpack.lock.json
 .cache
 .parcel-cache
+demo-dist

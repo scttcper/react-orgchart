@@ -1,66 +1,46 @@
-import React from 'react';
+import { memo, useEffect, useRef } from 'react';
 
-import { init } from './chart/index';
-import { Config, config as defaultConfig } from './chart/config';
+import { config as defaultConfig, type Config } from './chart/config';
+import { initializeOrgChart } from './chart/index';
+import type { TreeItem } from './types';
 
 const defaultId = 'react-org-chart';
 
-export interface TreeItem {
-  [key: string]: TreeItem[] | any;
-  id?: string | number;
-  parentId?: string | number | null;
-  children?: TreeItem[] | null;
-  entity?: {
-    [key: string]: any;
-    avatar?: string;
-    link?: string;
-    name?: string;
-    title?: string;
-  };
-}
+export type { TreeItem } from './types';
 
-type Props = Partial<Config> & {
+export type OrgChartProps = Partial<Config> & {
   id?: string;
   disableCanvasMouseMove?: boolean;
   disableCanvasMouseWheelZoom?: boolean;
-  tree: TreeItem[] | TreeItem;
+  tree: TreeItem | TreeItem[];
 };
 
-export class OrgChart extends React.PureComponent<Props> {
-  anchor = React.createRef();
-  onDestroy!: () => void;
+function OrgChartComponent(props: OrgChartProps) {
+  const {
+    id = defaultId,
+    disableCanvasMouseMove = false,
+    disableCanvasMouseWheelZoom = false,
+    tree,
+  } = props;
+  const anchor = useRef<HTMLDivElement>(null);
 
-  componentDidMount() {
-    const {
-      id = defaultId,
-      disableCanvasMouseMove = false,
-      disableCanvasMouseWheelZoom = false,
-      tree,
-      ...options
-    } = this.props;
-
-    this.onDestroy = init({
+  useEffect(() => {
+    const onDestroy = initializeOrgChart({
       ...defaultConfig,
+      ...props,
       id: `#${id}`,
-      elem: this.anchor.current,
+      elem: anchor.current,
       data: tree,
       disableCanvasMouseMove,
       disableCanvasMouseWheelZoom,
-      ...options,
     });
-  }
 
-  componentWillUnmount() {
-    this.onDestroy();
-  }
+    return () => {
+      onDestroy();
+    };
+  }, [props, id, tree, disableCanvasMouseMove, disableCanvasMouseWheelZoom]);
 
-  render() {
-    const { id = defaultId } = this.props;
-
-    return React.createElement('div', {
-      id,
-      ref: this.anchor,
-      style: { width: '100%', height: '100%' },
-    });
-  }
+  return <div id={id} ref={anchor} style={{ width: '100%', height: '100%' }} />;
 }
+
+export const OrgChart = memo(OrgChartComponent);
